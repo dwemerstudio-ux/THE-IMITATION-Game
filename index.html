@@ -9,29 +9,31 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-  <!-- Эффект вспышки и терминальный экран -->
-  <div id="flashOverlay"></div>
+
+  <!-- Терминальный ввод с правилами -->
   <div id="terminalOverlay">
     <div id="terminalBox">
-      <div id="terminalText"></div>
-      <span id="cursor"></span>
-      <div id="terminalButtons" style="display:none;margin-top:1rem;text-align:center;">
+      <h2>[NAR-HOZ_LAB]: ПРОТОКОЛ МАШИННОЙ ИМИТАЦИИ V2.0</h2>
+      <pre id="terminalText">
+Правила симуляции:
+1. Не нарушать установленные протоколы.
+2. Принять участие в моральных тестах.
+3. Следить за стабильностью системы.
+4. Сохранять хладнокровие.
+5. Будьте спокойны.
+      </pre>
+      <div id="terminalButtons">
         <button id="btnAgree">ПОДТВЕРДИТЬ УЧАСТИЕ</button>
         <button id="btnRefuse" class="secondary">ОТКАЗАТЬСЯ</button>
       </div>
     </div>
   </div>
 
-  <!-- Аудио -->
-  <audio id="soundHuman" src="https://cdn.pixabay.com/download/audio/2023/03/20/audio_2218dc8121.mp3" preload="auto"></audio>
-  <audio id="soundRobot" src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_104b1c6b2a.mp3" preload="auto"></audio>
-
   <!-- Основная игра -->
   <main id="mainGame" class="hidden">
-
     <section id="intro">
       <h1>Игра в Имитацию</h1>
-      <p>Ты не знаешь, человек ты или робот. Сделай выбор, следуя своим моральным принципам.</p>
+      <p>Введите данные участника:</p>
       <form onsubmit="event.preventDefault(); startGame();">
         <input type="text" id="playerName" placeholder="Имя" required>
         <input type="number" id="playerAge" placeholder="Возраст" min="10" max="120" required>
@@ -55,17 +57,14 @@
     </section>
 
     <section id="result" class="hidden">
-      <h2>Результат</h2>
+      <h2>Результат симуляции</h2>
       <p id="summary"></p>
-      <div id="archetypeBox"></div>
       <div class="bar-wrap">
         <div id="barHB" class="bar-hb"></div>
         <div id="barRB" class="bar-rb"></div>
       </div>
       <canvas id="chart" height="100"></canvas>
-      <div id="achievementsBox"></div>
-      <button onclick="exportCSV()">📥 Экспорт CSV</button>
-      <button onclick="restartGame()">🔁 Пройти ещё раз</button>
+      <button onclick="restartGame()">🔁 Перезапуск</button>
     </section>
   </main>
 

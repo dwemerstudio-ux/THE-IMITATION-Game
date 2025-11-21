@@ -2,7 +2,6 @@
   --bg: #010e0e;
   --text: #00ffcc;
   --muted: #94a3b8;
-  --primary: #60a5fa;
   --accent: #00ffaa;
 }
 
@@ -22,12 +21,8 @@ html, body {
   pointer-events: none;
 }
 
-.fade-in {
-  animation: fadeIn 0.8s ease forwards;
-}
-.fade-out {
-  animation: fadeOut 0.8s ease forwards;
-}
+.fade-in { animation: fadeIn 0.8s ease forwards; }
+.fade-out { animation: fadeOut 0.8s ease forwards; }
 
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(10px); }
@@ -38,7 +33,46 @@ html, body {
   to { opacity: 0; transform: translateY(10px); }
 }
 
-/* --- Секция --- */
+/* Терминальный экран */
+#terminalOverlay {
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(circle at 50% 40%, #001a1a, #000 80%);
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+  transition: opacity 0.8s ease;
+}
+
+#terminalBox {
+  background: rgba(0, 40, 40, 0.4);
+  border: 1px solid var(--accent);
+  border-radius: 12px;
+  box-shadow: 0 0 30px #00ffaa22;
+  padding: 2rem;
+  width: 700px;
+  max-width: 90%;
+}
+
+#terminalText {
+  font-size: 1rem;
+  white-space: pre-line;
+  margin-top: 1rem;
+}
+
+#terminalButtons {
+  margin-top: 1.5rem;
+  text-align: center;
+}
+
+#terminalButtons button {
+  margin: 0 0.5rem;
+  padding: 0.6rem 1.2rem;
+}
+
+/* Секции */
 section {
   background: rgba(0, 40, 40, 0.25);
   border: 1px solid var(--accent);
@@ -49,13 +83,11 @@ section {
   max-width: 700px;
 }
 
-/* --- Заголовки --- */
 h1, h2 {
   text-align: center;
   color: var(--accent);
 }
 
-/* --- Кнопки --- */
 button {
   display: block;
   margin: 10px auto;
@@ -74,7 +106,7 @@ button:hover {
   box-shadow: 0 0 10px var(--accent);
 }
 
-/* --- Шкала уверенности --- */
+/* Ползунок уверенности */
 input[type=range] {
   width: 100%;
   accent-color: var(--accent);
@@ -87,7 +119,7 @@ input[type=range] {
   margin-top: 8px;
 }
 
-/* --- Системные оверлеи --- */
+/* Системный оверлей */
 .system-overlay {
   position: fixed;
   inset: 0;
@@ -101,6 +133,4 @@ input[type=range] {
   transition: opacity 0.6s ease;
   z-index: 9999;
 }
-.system-overlay.show {
-  opacity: 1;
-}
+.system-overlay.show { opacity: 1; }

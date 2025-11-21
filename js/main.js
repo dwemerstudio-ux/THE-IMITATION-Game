@@ -107,3 +107,26 @@ function updateConfidenceHint() {
   else if (val > 70) hint.textContent = "— уверенность —";
   else hint.textContent = "— равновесие решений —";
 }
+// === Терминальный экран ===
+window.addEventListener("DOMContentLoaded", () => {
+  const agree = document.getElementById("btnAgree");
+  const refuse = document.getElementById("btnRefuse");
+  const overlay = document.getElementById("terminalOverlay");
+
+  if (agree && overlay) {
+    agree.addEventListener("click", async () => {
+      overlay.classList.add("fade-out");
+      await Diagnostics.sleep(800);
+      overlay.remove();
+      startGame();
+    });
+  }
+
+  if (refuse) {
+    refuse.addEventListener("click", () => {
+      alert("Симуляция прервана. Система завершает сеанс.");
+      window.close();
+    });
+  }
+});
+
