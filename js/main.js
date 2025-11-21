@@ -107,17 +107,19 @@ function updateConfidenceHint() {
   else if (val > 70) hint.textContent = "— уверенность —";
   else hint.textContent = "— равновесие решений —";
 }
-// === Терминальный экран: печать текста + запуск игры ===
+// === Терминальный экран: эффект печати ===
 window.addEventListener("DOMContentLoaded", () => {
   const overlay = document.getElementById("terminalOverlay");
   const box = document.getElementById("terminalBox");
   const text = document.getElementById("terminalText");
+  const buttons = document.getElementById("terminalButtons");
   const agree = document.getElementById("btnAgree");
   const refuse = document.getElementById("btnRefuse");
 
   if (!overlay || !text || !agree) return;
 
-  const rules = [
+  // Список строк для вывода
+  const lines = [
     "[NAR-HOZ_LAB]: ПРОТОКОЛ МАШИННОЙ ИМИТАЦИИ V2.0",
     "",
     "Правила симуляции:",
@@ -130,29 +132,46 @@ window.addEventListener("DOMContentLoaded", () => {
     "[СИСТЕМА]: для продолжения подтвердите участие..."
   ];
 
-  let index = 0;
+  let i = 0;
+  text.textContent = "";
+  overlay.style.opacity = 0;
 
-  // печать текста построчно
-  function typeNextLine() {
-    if (index >= rules.length) {
-      document.getElementById("terminalButtons").style.display = "block";
+  // Плавное появление терминала
+  setTimeout(() => {
+    overlay.style.transition = "opacity 1s ease";
+    overlay.style.opacity = 1;
+
+    // Запуск эффекта печати после появления
+    setTimeout(() => typeLine(), 800);
+  }, 300);
+
+  function typeLine() {
+    if (i >= lines.length) {
+      buttons.style.display = "block";
       return;
     }
+
     const line = document.createElement("div");
-    line.textContent = rules[index++];
+    line.className = "term-line";
     text.appendChild(line);
-    box.scrollTop = box.scrollHeight;
-    setTimeout(typeNextLine, 400);
+
+    let j = 0;
+    const chars = lines[i].split("");
+    const typer = setInterval(() => {
+      line.textContent += chars[j];
+      j++;
+      if (j >= chars.length) {
+        clearInterval(typer);
+        i++;
+        setTimeout(typeLine, 250);
+      }
+    }, 25);
   }
 
-  // запускаем эффект при загрузке
-  text.textContent = "";
-  setTimeout(typeNextLine, 600);
-
-  // подтверждение участия
+  // Кнопки
   agree.addEventListener("click", async () => {
     overlay.classList.add("fade-out");
-    await new Promise(r => setTimeout(r, 900));
+    await new Promise(r => setTimeout(r, 800));
     overlay.remove();
 
     document.getElementById("mainGame").classList.remove("hidden");
@@ -162,7 +181,6 @@ window.addEventListener("DOMContentLoaded", () => {
     console.log("[СИСТЕМА]: симуляция активна.");
   });
 
-  // отказ
   refuse.addEventListener("click", () => {
     alert("Симуляция прервана. Сеанс завершён.");
     window.close();
