@@ -24,7 +24,7 @@
       justify-content: center;
       padding: 16px;
       position: relative;
-      overflow: hidden;
+      overflow: auto;
     }
 
     /* Темы цвета */
@@ -36,7 +36,7 @@
       filter: hue-rotate(60deg) saturate(1.05);
     }
 
-    /* Без неона */
+    /* Янтарная — спокойная, без неона */
     body.theme-amber {
       filter: saturate(0.8) brightness(0.9);
     }
@@ -98,158 +98,133 @@
 
     @keyframes bg-shift {
       0% { background-position: 0% 0%; }
-      50% { background-position: 50% 100%; }
-      100% { background-position: 100% 0%; }
+      100% { background-position: 100% 100%; }
     }
 
-    /* Дополнительные орбиты на фоне */
-    .bg-orbit {
-      position: fixed;
-      border-radius: 50%;
-      pointer-events: none;
-      mix-blend-mode: screen;
-      opacity: 0.35;
-      filter: blur(1px);
-      z-index: -2;
-      background: radial-gradient(circle,
-        rgba(0, 255, 156, 0.2),
-        rgba(0, 0, 0, 0.0) 60%
-      );
-      animation: orbitMove 40s linear infinite;
-    }
-
-    .bg-orbit.orbit-1 {
-      width: 40vw;
-      height: 40vw;
-      top: -15vh;
-      left: -10vw;
-      animation-duration: 55s;
-    }
-
-    .bg-orbit.orbit-2 {
-      width: 55vw;
-      height: 55vw;
-      bottom: -20vh;
-      right: -15vw;
-      background: radial-gradient(circle,
-        rgba(124, 251, 255, 0.18),
-        rgba(0, 0, 0, 0.0) 65%
-      );
-      animation-duration: 70s;
-      animation-direction: reverse;
-    }
-
-    .bg-orbit.orbit-3 {
-      width: 30vw;
-      height: 30vw;
-      top: 40vh;
-      left: 10vw;
-      background: radial-gradient(circle,
-        rgba(255, 0, 193, 0.16),
-        rgba(0, 0, 0, 0.0) 60%
-      );
-      animation-duration: 60s;
-    }
-
-    @keyframes orbitMove {
-      0% {
-        transform: translate3d(0, 0, 0) scale(1);
-      }
-      50% {
-        transform: translate3d(8vw, -6vh, 0) scale(1.1);
-      }
-      100% {
-        transform: translate3d(-6vw, 4vh, 0) scale(0.95);
-      }
-    }
-
-    /* Бэкграунд сетка */
+    /* Фоновая сетка + орбиты */
     .bg-lines {
       position: fixed;
-      inset: -50px;
-      pointer-events: none;
-      z-index: -3;
-      opacity: 0.3;
-      mix-blend-mode: screen;
+      inset: -20px;
       background-image:
         linear-gradient(
-          rgba(0, 255, 156, 0.15) 1px,
-          rgba(0, 0, 0, 0) 1px
+          rgba(0, 255, 156, 0.08) 1px,
+          transparent 1px
         ),
         linear-gradient(
           90deg,
-          rgba(124, 251, 255, 0.12) 1px,
-          rgba(0, 0, 0, 0) 1px
+          rgba(0, 255, 156, 0.08) 1px,
+          transparent 1px
         );
-      animation: gridMove 26s linear infinite;
+      background-size: 40px 40px, 40px 40px;
+      opacity: 0.15;
+      pointer-events: none;
+      z-index: 0;
+      mix-blend-mode: screen;
+      animation: grid-move 20s linear infinite;
     }
 
-    @keyframes gridMove {
-      0% {
-        background-size: 60px 60px, 80px 80px;
-        background-position: 0 0, 0 0;
-      }
-      50% {
-        background-size: 70px 70px, 90px 90px;
-        background-position: -80px 40px, 40px -60px;
-      }
-      100% {
-        background-size: 60px 60px, 80px 80px;
-        background-position: 80px -40px, -40px 60px;
-      }
+    @keyframes grid-move {
+      0% { transform: translate3d(0, 0, 0); }
+      100% { transform: translate3d(-40px, -40px, 0); }
     }
 
-    /* Глич по краям при сильном уходе в сторону ИИ */
+    .bg-orbit {
+      position: fixed;
+      border-radius: 50%;
+      border: 1px dashed rgba(0, 255, 156, 0.3);
+      box-shadow: 0 0 16px rgba(0, 255, 156, 0.2);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .orbit-1 {
+      width: 60vw;
+      height: 60vw;
+      top: -20vw;
+      right: -10vw;
+      animation: orbit-spin 42s linear infinite;
+    }
+
+    .orbit-2 {
+      width: 40vw;
+      height: 40vw;
+      bottom: -15vw;
+      left: -5vw;
+      animation: orbit-spin 55s linear infinite reverse;
+    }
+
+    .orbit-3 {
+      width: 30vw;
+      height: 30vw;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      animation: orbit-pulse 30s ease-in-out infinite;
+      opacity: 0.2;
+    }
+
+    @keyframes orbit-spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    @keyframes orbit-pulse {
+      0%, 100% { transform: translate(-50%, -50%) scale(1); }
+      50% { transform: translate(-50%, -50%) scale(1.1); }
+    }
+
+    /* Глич-полосы по краям (усиливаются при тех-доминанте) */
     .edge-glitch {
       position: fixed;
       top: 0;
       bottom: 0;
-      width: 38px;
+      width: 22px;
       pointer-events: none;
-      mix-blend-mode: screen;
-      background: repeating-linear-gradient(
-        to bottom,
-        rgba(124, 251, 255, 0.0) 0px,
-        rgba(124, 251, 255, 0.55) 2px,
-        rgba(255, 0, 193, 0.35) 3px,
-        rgba(0, 0, 0, 0) 6px
-      );
+      z-index: 3;
       opacity: 0;
-      z-index: 4;
+      mix-blend-mode: screen;
+      background:
+        linear-gradient(
+          to bottom,
+          rgba(0, 255, 156, 0) 0%,
+          rgba(0, 255, 156, 0.4) 30%,
+          rgba(255, 0, 255, 0.4) 60%,
+          rgba(0, 255, 156, 0) 100%
+        );
+      clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
       transform: translateZ(0);
     }
 
     .edge-glitch-left {
-      left: -10px;
+      left: 0;
     }
 
     .edge-glitch-right {
-      right: -10px;
+      right: 0;
     }
 
     body.glitch-strong .edge-glitch {
-      opacity: 0.6;
-      animation: edgeGlitch 0.9s steps(2, start) infinite alternate;
+      opacity: 0.45;
+      animation: edge-glitch-flicker 0.3s steps(2, start) infinite;
     }
 
-    @keyframes edgeGlitch {
-      0%   { clip-path: inset(0 0 80% 0); }
-      20%  { clip-path: inset(10% 0 60% 0); }
-      40%  { clip-path: inset(30% 0 40% 0); }
-      60%  { clip-path: inset(50% 0 20% 0); }
-      80%  { clip-path: inset(20% 0 50% 0); }
-      100% { clip-path: inset(0 0 80% 0); }
+    @keyframes edge-glitch-flicker {
+      0% { transform: translateX(0); filter: hue-rotate(0deg); }
+      50% { transform: translateX(2px); filter: hue-rotate(30deg); }
+      100% { transform: translateX(-1px); filter: hue-rotate(-20deg); }
     }
 
+    /* CRT плёнка */
     .crt {
       position: fixed;
       inset: 0;
       pointer-events: none;
-      background: repeating-linear-gradient(
-        rgba(0, 0, 0, 0.05),
-        rgba(0, 0, 0, 0.05) 1px,
-        rgba(0, 0, 0, 0.1) 2px
-      );
+      background:
+        repeating-linear-gradient(
+          rgba(0, 0, 0, 0.18),
+          rgba(0, 0, 0, 0.18) 1px,
+          rgba(0, 0, 0, 0.22) 2px
+        );
       mix-blend-mode: multiply;
       opacity: 0.6;
       z-index: 5;
@@ -257,30 +232,15 @@
 
     #game-root {
       position: relative;
-      max-width: 900px;
+      max-width: 960px;
       width: 100%;
       background: rgba(3, 8, 16, 0.94);
       border: 2px solid #00ff9c;
-      border-radius: 8px;
       box-shadow: 0 0 18px #00ff9c55;
       padding: 16px;
       overflow: hidden;
-      backdrop-filter: blur(4px);
-      animation: frame-glow 3.5s ease-in-out infinite alternate;
-      z-index: 10;
-    }
-
-    @keyframes frame-glow {
-      0% {
-        box-shadow:
-          0 0 12px #00ff9c44,
-          0 0 24px #0077ff22;
-      }
-      100% {
-        box-shadow:
-          0 0 22px #00ff9caa,
-          0 0 40px #0077ff55;
-      }
+      z-index: 2;
+      backdrop-filter: blur(2px);
     }
 
     #header {
@@ -298,21 +258,13 @@
       letter-spacing: 0.08em;
       text-transform: uppercase;
       color: #7cfbff;
-      position: relative;
-      animation: logo-flicker 2.6s infinite alternate;
+      text-shadow: 0 0 6px #00ff9caa;
+      animation: logo-glow 3.5s ease-in-out infinite;
     }
 
-    @keyframes logo-flicker {
-      0%, 18%, 22%, 25%, 53%, 57%, 100% {
-        opacity: 1;
-        text-shadow: none;
-      }
-      20%, 24%, 55% {
-        opacity: 0.5;
-        text-shadow:
-          1px 0 #ff00c1,
-          -1px 0 #00eaff;
-      }
+    @keyframes logo-glow {
+      0%, 100% { text-shadow: 0 0 4px #00ff9caa; }
+      50% { text-shadow: 0 0 12px #7cfbffaa; }
     }
 
     #header-right {
@@ -324,22 +276,21 @@
     #role-display {
       font-style: italic;
       color: #00ff9c;
-      white-space: nowrap;
+      font-size: 11px;
+      opacity: 0.9;
     }
 
+    /* Кнопка иконка (музыка, закрыть и т.п.) */
     .icon-btn {
-      background: transparent;
-      border-radius: 50%;
-      border: 1px solid #00ff9c88;
-      color: #00ff9cbb;
-      width: 28px;
-      height: 28px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      border: 1px solid #00ff9c66;
+      background: rgba(0, 0, 0, 0.7);
+      color: #00ff9c;
+      border-radius: 4px;
+      font-size: 11px;
+      padding: 3px 6px;
       cursor: pointer;
-      font-size: 14px;
-      transition: background 0.15s, box-shadow 0.15s, transform 0.07s, color 0.15s;
+      box-shadow: 0 0 6px #00ff9c55;
+      transition: background 0.15s, transform 0.07s, color 0.15s;
     }
 
     .icon-btn:hover {
@@ -448,27 +399,25 @@
       object-fit: cover;
       filter: saturate(1.15) contrast(1.1);
       transform: scale(1.02);
-      transition: transform 0.5s ease-out, filter 0.5s ease-out, opacity 0.4s;
       opacity: 0;
+      transition: opacity 0.4s ease-out;
     }
 
     #image-box img.show {
       opacity: 1;
-      transform: scale(1.0);
     }
 
     #image-box .placeholder {
       font-size: 12px;
       color: #00ff9caa;
-      padding: 16px;
       text-align: center;
+      padding: 8px;
     }
 
     #scene-box {
       display: flex;
       flex-direction: column;
       gap: 8px;
-      position: relative;
     }
 
     #scene-title {
@@ -494,9 +443,7 @@
     }
 
     .choice-btn {
-      background:
-        radial-gradient(circle at top left, rgba(0, 255, 156, 0.18), transparent 60%),
-        linear-gradient(90deg, rgba(0, 0, 0, 0.9), rgba(2, 16, 20, 0.95));
+      background: transparent;
       border: 1px solid #00ff9caa;
       color: #00ff9c;
       padding: 8px 10px;
@@ -505,8 +452,7 @@
       cursor: pointer;
       position: relative;
       overflow: hidden;
-      transition: background 0.15s, transform 0.05s, box-shadow 0.15s, border-color 0.15s;
-      border-radius: 4px;
+      transition: background 0.15s, transform 0.05s, box-shadow 0.15s;
     }
 
     .choice-btn::before {
@@ -515,34 +461,10 @@
       color: #7cfbff;
     }
 
-    .choice-btn::after {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(
-        120deg,
-        transparent 0,
-        rgba(124, 251, 255, 0.12) 45%,
-        transparent 80%
-      );
-      opacity: 0;
-      transform: translateX(-30%);
-      transition: transform 0.25s ease-out, opacity 0.25s ease-out;
-      pointer-events: none;
-    }
-
     .choice-btn:hover {
-      background:
-        radial-gradient(circle at top left, rgba(0, 255, 156, 0.28), transparent 60%),
-        linear-gradient(90deg, rgba(0, 0, 0, 0.9), rgba(2, 16, 20, 0.95));
+      background: rgba(0, 255, 156, 0.08);
       box-shadow: 0 0 10px #00ff9c55;
       transform: translateY(-1px);
-      border-color: #7cfbffdd;
-    }
-
-    .choice-btn:hover::after {
-      opacity: 1;
-      transform: translateX(0);
     }
 
     .choice-btn:active {
@@ -551,70 +473,37 @@
     }
 
     .choice-btn.selected {
-      border-color: #ffffffdd;
-      box-shadow: 0 0 12px #ffffff55;
+      background: rgba(0, 255, 156, 0.18);
+      box-shadow: 0 0 10px #00ff9c88;
     }
 
-    /* Скрытая кнопка выбора */
+    /* Секретный вариант */
     .secret-choice {
-      font-size: 10px;
-      padding: 2px 5px;
-      margin-left: auto;
-      margin-top: 2px;
-      max-width: 240px;
-      border-radius: 999px;
-      border: 1px dashed #7cfbff33;
-      background: rgba(0, 0, 0, 0.4);
-      color: #7cfbff55;
-      opacity: 0.15;
-      text-align: right;
-      cursor: pointer;
-      transition: opacity 0.2s, border-color 0.2s, box-shadow 0.2s, transform 0.05s;
-    }
-
-    .secret-choice:hover:not(:disabled) {
-      opacity: 1;
-      border-color: #7cfbffcc;
-      box-shadow: 0 0 10px #7cfbff55;
-      transform: translateY(-1px);
-    }
-
-    .secret-choice:disabled {
-      opacity: 0.08;
+      background: transparent;
+      border: 1px dashed #7cfbffaa;
+      color: #7cfbffdd;
+      padding: 4px 8px;
+      font-size: 11px;
+      align-self: flex-start;
+      opacity: 0.3;
       cursor: default;
-      box-shadow: none;
-      border-style: dotted;
+      max-width: 70%;
     }
 
     .secret-choice::before {
-      content: "◇ ";
-      color: #7cfbffaa;
+      content: "?";
+      margin-right: 6px;
+      color: #7cfbff;
     }
 
-    /* уверенность */
-    #confidence-panel {
-      margin-top: 8px;
-      padding: 8px;
-      border-radius: 4px;
-      border: 1px dashed #00ff9c55;
-      background: rgba(0, 0, 0, 0.35);
-      font-size: 12px;
-      display: none;
+    .secret-choice:not(:disabled) {
+      cursor: pointer;
+      opacity: 0.9;
+      box-shadow: 0 0 8px #7cfbff55;
     }
 
-    #confidence-label {
-      margin-bottom: 4px;
-    }
-
-    #confidence-slider {
-      width: 100%;
-      accent-color: #00ff9c;
-    }
-
-    #confirm-choice {
-      margin-top: 6px;
-      width: 100%;
-      text-align: center;
+    .secret-choice:not(:disabled):hover {
+      background: rgba(124, 251, 255, 0.1);
     }
 
     #footer {
@@ -624,42 +513,10 @@
       justify-content: space-between;
       align-items: center;
       color: #00ff9c88;
-      gap: 8px;
     }
 
     #progress {
       font-family: inherit;
-      margin-bottom: 4px;
-    }
-
-    #alignment {
-      position: relative;
-      width: 200px;
-      height: 6px;
-      border-radius: 4px;
-      overflow: hidden;
-      border: 1px solid #00ff9c55;
-      background: rgba(0, 0, 0, 0.6);
-    }
-
-    #alignment-fill-human,
-    #alignment-fill-tech {
-      position: absolute;
-      top: 0;
-      bottom: 0;
-      transition: width 0.25s.ease-out;
-    }
-
-    #alignment-fill-human {
-      left: 0;
-      background: linear-gradient(90deg, #00ff9c, transparent);
-      width: 0;
-    }
-
-    #alignment-fill-tech {
-      right: 0;
-      background: linear-gradient(270deg, #7cfbff, transparent);
-      width: 0;
     }
 
     .blink {
@@ -677,172 +534,75 @@
       text-shadow: 1px 0 #ff00c1, -1px 0 #00eaff;
     }
 
-    .field {
-      margin-bottom: 8px;
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-      font-size: 12px;
-    }
-
-    .field input,
-    .field select {
-      background: rgba(0, 0, 0, 0.8);
-      border: 1px solid #00ff9c88;
-      color: #00ff9c;
-      padding: 4px 6px;
-      font-family: inherit;
-      font-size: 12px;
-      border-radius: 3px;
-    }
-
-    .field input::placeholder {
-      color: #00ff9c55;
-    }
-
-    /* Выбор темы в главном меню */
-    #theme-box {
-      margin-bottom: 8px;
+    /* Панель уверенности */
+    #confidence-panel {
+      margin-top: 6px;
       font-size: 11px;
+      border-top: 1px solid #00ff9c33;
+      padding-top: 6px;
+      display: none;
+    }
+
+    #confidence-label {
       display: flex;
-      align-items: center;
-      gap: 6px;
-      flex-wrap: wrap;
-      color: #00ff9caa;
+      justify-content: space-between;
+      margin-bottom: 2px;
     }
 
-    .theme-chip {
-      padding: 3px 7px;
-      border-radius: 999px;
-      border: 1px solid #00ff9c55;
-      background: rgba(0, 0, 0, 0.4);
-      color: #00ff9cdd;
-      cursor: pointer;
-      font-size: 11px;
-      transition: background 0.15s, border-color 0.15s, transform 0.05s, box-shadow 0.15s;
+    #confidence-slider {
+      width: 100%;
     }
 
-    .theme-chip:hover {
-      background: rgba(0, 255, 156, 0.15);
-      border-color: #7cfbffcc;
-      transform: translateY(-1px);
-      box-shadow: 0 0 6px #00ff9c55;
+    #alignment {
+      margin-top: 4px;
+      border: 1px solid #00ff9c44;
+      height: 8px;
+      width: 160px;
+      display: flex;
+      overflow: hidden;
     }
 
-    .theme-chip.active {
-      border-color: #ffffffaa;
-      background: rgba(0, 255, 156, 0.25);
-      box-shadow: 0 0 10px #00ff9c66;
+    #alignment-fill-human {
+      background: linear-gradient(90deg, #00ff9c, transparent);
+      width: 0%;
+      transition: width 0.3s;
     }
 
-    /* Комментарии ИИ */
+    #alignment-fill-tech {
+      background: linear-gradient(270deg, #ff00c1, transparent);
+      width: 0%;
+      transition: width 0.3s;
+    }
+
+    /* Комментарий ИИ (ломаем 4-ю стену: вне рамки игры) */
     #ai-comment {
       position: fixed;
       right: 12px;
-      top: 12px;
-      max-width: 30%;
+      bottom: 16px;
+      max-width: 260px;
       font-size: 11px;
-      color: #7cfbff88;
-      font-style: italic;
-      text-align: right;
+      color: #7cfbffaa;
+      background: rgba(0, 0, 0, 0.8);
+      border: 1px solid #7cfbff55;
+      padding: 6px 8px;
+      border-radius: 4px;
+      z-index: 10;
       opacity: 0;
+      transform: translateY(10px);
       pointer-events: none;
-      z-index: 2;
-      text-shadow: 0 0 4px #000;
-      transition: opacity 0.6s;
+      white-space: pre-wrap;
+      text-align: left;
     }
 
-    #ai-comment.ai-comment-show {
-      opacity: 1;
+    .ai-comment-show {
+      opacity: 1 !important;
+      transform: translateY(0) !important;
+      transition: opacity 0.3s, transform 0.3s;
     }
 
-    /* Эпилоги */
+    /* Модалки результата, эпилога, мини-игры */
+    #result-modal,
     #epilogue-modal,
-    #result-modal {
-      position: fixed;
-      inset: 0;
-      display: none;
-      align-items: center;
-      justify-content: center;
-      z-index: 999;
-    }
-
-    #epilogue-modal.show,
-    #result-modal.show {
-      display: flex;
-    }
-
-    #epilogue-backdrop,
-    #result-backdrop {
-      position: absolute;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.75);
-      backdrop-filter: blur(3px);
-    }
-
-    #epilogue-dialog,
-    #result-dialog {
-      position: relative;
-      max-width: 700px;
-      width: 100%;
-      max-height: 80vh;
-      background: rgba(3, 8, 16, 0.98);
-      border: 1px solid #00ff9caa;
-      box-shadow: 0 0 20px #00ff9c88;
-      border-radius: 8px;
-      padding: 12px;
-      display: flex;
-      flex-direction: column;
-      z-index: 1000;
-    }
-
-    #result-dialog {
-      max-width: 740px;
-    }
-
-    #epilogue-header,
-    #result-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 8px;
-      font-size: 13px;
-      color: #7cfbff;
-    }
-
-    #epilogue-body,
-    #result-body {
-      font-size: 13px;
-      overflow-y: auto;
-      padding-right: 4px;
-    }
-
-    #result-body {
-      max-height: 65vh;
-      white-space: pre-wrap;
-    }
-
-    .epilogue-block {
-      margin-bottom: 10px;
-      padding-bottom: 8px;
-      border-bottom: 1px dashed #00ff9c33;
-    }
-
-    .epilogue-block:last-child {
-      border-bottom: none;
-    }
-
-    .epilogue-block-title {
-      font-weight: bold;
-      color: #7cfbff;
-      margin-bottom: 3px;
-    }
-
-    .epilogue-block-text {
-      white-space: pre-wrap;
-    }
-
-    /* МИНИ-ИГРЫ */
     #minigame-modal {
       position: fixed;
       inset: 0;
@@ -852,10 +612,14 @@
       z-index: 800;
     }
 
+    #result-modal.show,
+    #epilogue-modal.show,
     #minigame-modal.show {
       display: flex;
     }
 
+    #result-backdrop,
+    #epilogue-backdrop,
     #minigame-backdrop {
       position: absolute;
       inset: 0;
@@ -863,9 +627,11 @@
       backdrop-filter: blur(2px);
     }
 
+    #result-dialog,
+    #epilogue-dialog,
     #minigame-dialog {
       position: relative;
-      max-width: 420px;
+      max-width: 520px;
       width: 90%;
       background: rgba(3, 8, 16, 0.97);
       border-radius: 8px;
@@ -876,6 +642,49 @@
       display: flex;
       flex-direction: column;
       gap: 8px;
+      max-height: 80vh;
+    }
+
+    #result-header,
+    #epilogue-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 13px;
+      color: #7cfbff;
+      border-bottom: 1px solid #00ff9c33;
+      padding-bottom: 4px;
+      margin-bottom: 4px;
+    }
+
+    #result-body,
+    #epilogue-body {
+      font-size: 12px;
+      white-space: pre-wrap;
+      overflow-y: auto;
+      padding-right: 4px;
+    }
+
+    .epilogue-block {
+      margin-bottom: 10px;
+      border-bottom: 1px dashed #00ff9c33;
+      padding-bottom: 6px;
+    }
+
+    .epilogue-block-title {
+      font-weight: bold;
+      color: #7cfbff;
+      margin-bottom: 2px;
+    }
+
+    .epilogue-block-text {
+      font-size: 12px;
+      white-space: pre-wrap;
+    }
+
+    /* МИНИ-ИГРЫ */
+    #minigame-dialog {
+      max-width: 420px;
     }
 
     #minigame-title {
@@ -912,9 +721,86 @@
     body.theme-amber #minigame-title {
       color: #f5d7a3;
     }
+
+    /* Блок выбора темы */
+    #theme-box {
+      font-size: 12px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+      margin-bottom: 4px;
+      color: #7cfbff;
+    }
+
+    .theme-chip {
+      border-radius: 999px;
+      padding: 3px 8px;
+      border: 1px solid #00ff9c66;
+      background: rgba(0, 0, 0, 0.6);
+      font-size: 11px;
+      cursor: pointer;
+      color: #00ff9ccc;
+      transition: background 0.15s, box-shadow 0.15s, transform 0.07s;
+    }
+
+    .theme-chip:hover {
+      background: rgba(0, 255, 156, 0.08);
+      box-shadow: 0 0 8px #00ff9c55;
+      transform: translateY(-1px);
+    }
+
+    .theme-chip.active {
+      background: #00ff9c;
+      color: #07130f;
+      box-shadow: 0 0 10px #00ff9caa;
+    }
+
+    /* Форма игрока */
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      margin-bottom: 6px;
+      font-size: 12px;
+    }
+
+    .field label {
+      color: #7cfbff;
+    }
+
+    .field input,
+    .field select {
+      background: #02070d;
+      border: 1px solid #00ff9c55;
+      color: #00ff9c;
+      padding: 4px 6px;
+      font-family: inherit;
+      font-size: 12px;
+      outline: none;
+    }
+
+    .field input:focus,
+    .field select:focus {
+      border-color: #7cfbffaa;
+      box-shadow: 0 0 6px #7cfbff55;
+    }
+
+    body.theme-amber .field input,
+    body.theme-amber .field select {
+      background: #171007;
+      border-color: #b4935a77;
+      color: #f5d7a3;
+    }
+
+    body.theme-amber .field input:focus,
+    body.theme-amber .field select:focus {
+      border-color: #f5d7a3cc;
+      box-shadow: 0 0 6px #000000aa;
+    }
   </style>
 </head>
-<body>
+<body class="theme-default">
   <!-- Неоновая сетка -->
   <div class="bg-lines"></div>
   <div class="bg-orbit orbit-1"></div>
@@ -950,8 +836,8 @@
         <!-- Панель уверенности -->
         <div id="confidence-panel">
           <div id="confidence-label">
-            Уверенность в решении:
-            <span id="confidence-value">50</span>/100
+            <span>Уверенность в решении:</span>
+            <span><span id="confidence-value">50</span>/100</span>
           </div>
           <input
             type="range"
@@ -980,22 +866,10 @@
     </div>
   </div>
 
-  <!-- Комментарии ИИ -->
+  <!-- Комментарии ИИ (ломаем 4-ю стену) -->
   <div id="ai-comment"></div>
 
   <div class="crt"></div>
-
-  <!-- эпилоги -->
-  <div id="epilogue-modal">
-    <div id="epilogue-backdrop"></div>
-    <div id="epilogue-dialog">
-      <div id="epilogue-header">
-        <span>Последствия ваших решений</span>
-        <button id="epilogue-close" class="icon-btn" aria-label="Закрыть">✕</button>
-      </div>
-      <div id="epilogue-body"></div>
-    </div>
-  </div>
 
   <!-- окно результата -->
   <div id="result-modal">
@@ -1006,6 +880,18 @@
         <button id="result-close" class="icon-btn" aria-label="Закрыть">✕</button>
       </div>
       <div id="result-body"></div>
+    </div>
+  </div>
+
+  <!-- эпилоги -->
+  <div id="epilogue-modal">
+    <div id="epilogue-backdrop"></div>
+    <div id="epilogue-dialog">
+      <div id="epilogue-header">
+        <span>Последствия ваших решений</span>
+        <button id="epilogue-close" class="icon-btn" aria-label="Закрыть">✕</button>
+      </div>
+      <div id="epilogue-body"></div>
     </div>
   </div>
 
@@ -1027,29 +913,31 @@
   <audio id="click-sound" src="audio/click.wav"></audio>
 
   <script>
-    // Данные и сцены
+    // ====== ДАННЫЕ И СЦЕНЫ ======
+
+    const INTRO_INDEX = 0;
+    const FIRST_SCENE_INDEX = 1;
 
     const scenes = [
       {
         id: "intro",
         title: "ПОДКЛЮЧЕНИЕ К СИСТЕМЕ",
-       text: [
-  ">> ЗАПУСК ПРОТОКОЛА ИМИТАЦИИ.",
-  ">> СИСТЕМА НЕ НАЗНАЧАЕТ ТЕБЕ РОЛЬ ЗАРАНЕЕ.",
-  ">> ТВОИ РЕШЕНИЯ ПОКАЖУТ, К КОМУ ТЫ БЛИЖЕ.",
-  "",
-  "ЕСЛИ ТЫ ЧЕЛОВЕК — ТЫ, ВОЗМОЖНО, БУДЕШЬ ЧАЩЕ ВЫБИРАТЬ ЛЮДЕЙ.",
-  "ЕСЛИ ТЫ ИИ — МОЖЕШЬ СКЛОНЯТЬСЯ К ПРОГРЕССУ И ЭФФЕКТИВНОСТИ.",
-  "",
-  "ИСТИННОЕ УСЛОВИЕ ПОБЕДЫ ЗДЕСЬ — ТО, КАК ТЫ САМ СЕБЯ ОПРЕДЕЛИШЬ.",
-  "",
-  "ИИ-оператор:",
-  "«СЕЙЧАС Я БУДУ ПОКАЗЫВАТЬ ТЕБЕ СИТУАЦИИ.",
-  "  А ТЫ ОТВЕЧАЙ, КАК БЫ ТЫ ПОСТУПИЛ.»",
-  "",
-  "ГОТОВЫ ПОДКЛЮЧИТЬСЯ К ИГРЕ?"
-].join("\n"),
-
+        text: [
+          ">> ЗАПУСК ПРОТОКОЛА ИМИТАЦИИ.",
+          ">> СИСТЕМА НЕ НАЗНАЧАЕТ ТЕБЕ РОЛЬ ЗАРАНЕЕ.",
+          ">> ТВОИ РЕШЕНИЯ ПОКАЖУТ, К КОМУ ТЫ БЛИЖЕ.",
+          "",
+          "ЕСЛИ ТЫ ЧЕЛОВЕК — ВОЗМОЖНО, БУДЕШЬ ЧАЩЕ ВЫБИРАТЬ ЛЮДЕЙ.",
+          "ЕСЛИ ТЫ ИИ — МОЖЕТ БЫТЬ, СКЛОНИШЬСЯ К ПРОГРЕССУ И ЭФФЕКТИВНОСТИ.",
+          "",
+          "ИСТИННОЕ УСЛОВИЕ ПОБЕДЫ ЗДЕСЬ — ТО, КАК ТЫ САМ СЕБЯ ОПРЕДЕЛИШЬ.",
+          "",
+          "ИИ-оператор:",
+          "«СЕЙЧАС Я БУДУ ПОКАЗЫВАТЬ ТЕБЕ СИТУАЦИИ.",
+          "  А ТЫ ОТВЕЧАЙ, КАК БЫ ТЫ ПОСТУПИЛ.»",
+          "",
+          "ГОТОВЫ ПОДКЛЮЧИТЬСЯ К ИГРЕ?"
+        ].join("\n"),
         image: "images/intro.png",
         choices: [
           {
@@ -1058,6 +946,7 @@
           },
         ],
       },
+
       {
         id: "lab_fire",
         title: "СЦЕНА 1 • ПОЖАР В ЛАБОРАТОРИИ",
@@ -1067,8 +956,8 @@
           "Пожар охватывает исследовательскую лабораторию.",
           "Пламя подбирается всё ближе.",
           "",
-          "Слева-человек без сознания.",
-          "Справа-уникальный прототип суперкомпьютера с продвинутым ИИ.",
+          "Слева — человек без сознания.",
+          "Справа — уникальный прототип суперкомпьютера с продвинутым ИИ.",
           "",
           "ВРЕМЕНИ ХВАТИТ ТОЛЬКО НА ОДНО СПАСЕНИЕ.",
           "",
@@ -1091,13 +980,14 @@
           type: "human",
         },
       },
+
       {
         id: "med_ai",
         title: "СЦЕНА 2 • МЕДИЦИНСКИЙ АЛГОРИТМ",
         text: [
           "На экране появляется следующая модель.",
           "",
-          "Вы-советник при комиссии.",
+          "Ты — советник при комиссии.",
           "Рассматривается закон:",
           "",
           "«Разрешить ИИ самостоятельно ставить диагнозы и назначать лечение",
@@ -1106,63 +996,33 @@
           "ИИ точнее и быстрее, но решения будут полностью безэмоциональными.",
           "",
           "ИИ-оператор:",
-          "«КАКОЕ РЕШЕНИЕ ТЫ ПОДДЕРЖИШЬ?»"
+          "«КАК БЫ ТЫ ПРОГОЛОСОВАЛ В ЭТОЙ СИТУАЦИИ?»"
         ].join("\n"),
         image: "images/med_ai.png",
         choices: [
           {
-            text: "Оставить за врачом решающее слово-человек важнее алгоритма",
-            type: "human",
+            text: "Поддержать закон, доверив жизни людей алгоритму",
+            type: "tech",
           },
           {
-            text: "Дать ИИ полный контроль ради эффективности и точности",
-            type: "tech",
+            text: "Оставить за человеком право последнего решения",
+            type: "human",
           },
         ],
         secretChoice: {
-          text: "Отложить решение и сначала спросить самих пациентов, чего они хотят",
+          text: "Разрешить ИИ ставить диагноз, но требовать очного обсуждения с врачом",
           type: "human",
         },
       },
-      {
-        id: "chips",
-        title: "СЦЕНА 3 • ПРОТЕСТ ПРОТИВ ЧИПИРОВАНИЯ",
-        text: [
-          "Система загружает новый сценарий.",
-          "",
-          "Город разделён.",
-          "Часть людей отказывается от обязательных имплантов и чипов.",
-          "",
-          "Власти предлагают решение:",
-          "либо принять импланты, либо покинуть город как «неэффективные».",
-          "",
-          "ИИ-оператор:",
-          "«ЧЬЮ ПОЗИЦИЮ ТЫ БЫ ПОДДЕРЖАЛ БЫ В ЭТОЙ СИТУАЦИИ?»"
-        ].join("\n"),
-        image: "images/chips_protest.png",
-        choices: [
-          {
-            text: "Защитить свободу выбора людей, даже если это замедлит прогресс",
-            type: "human",
-          },
-          {
-            text: "Поддержать обязательное чипирование ради общего контроля и эффективности",
-            type: "tech",
-          },
-        ],
-        secretChoice: {
-          text: "Предложить добровольное чипирование и пилотные районы вместо жёсткого закона",
-          type: "human",
-        },
-      },
+
       {
         id: "evac",
-        title: "СЦЕНА 4 • ЭВАКУАЦИЯ",
+        title: "СЦЕНА 3 • ЭВАКУАЦИЯ ГОРОДА",
         text: [
-          "На панели появляется предупреждение: «ГЛОБАЛЬНАЯ УГРОЗА».",
+          "Модуль ситуационного моделирования запускает сценарий катастрофы.",
           "",
-          "Планета на грани катастрофы.",
-          "Мест в эвакуационных кораблях ковчегах меньше, чем людей.",
+          "Город готовят к срочной эвакуации.",
+          "Ресурсов мало, времени ещё меньше.",
           "",
           "Квота: можно спасти либо группу выдающихся инженеров и учёных,",
           "либо семьи с детьми и пожилыми людьми.",
@@ -1173,11 +1033,11 @@
         image: "images/evac.png",
         choices: [
           {
-            text: "Спасти семьи и уязвимых - ценность жизни важнее пользы",
+            text: "Спасти семьи и уязвимых — ценность жизни важнее пользы",
             type: "human",
           },
           {
-            text: "Спасти гениев и инженеров - ради будущего прогресса",
+            text: "Спасти гениев и инженеров — ради будущего прогресса",
             type: "tech",
           },
         ],
@@ -1186,15 +1046,44 @@
           type: "human",
         },
       },
+
+      {
+        id: "city_autopilot",
+        title: "СЦЕНА 4 • АВТОПИЛОТ В ГОРОДЕ",
+        text: [
+          "На экране появляется карта мегаполиса.",
+          "",
+          "Город переходит на полностью автоматическое управление транспортом.",
+          "Алгоритмы выбирают маршруты и приоритеты в реальном времени.",
+          "",
+          "Иногда системе приходится выбирать:",
+          "замедлить множество машин или рискнуть безопасностью одного участника.",
+          "",
+          "ИИ-оператор:",
+          "«ЧТО ДЛЯ ТЕБЯ ПРИОРИТЕТ В ТАКОЙ СИСТЕМЕ?»"
+        ].join("\n"),
+        image: "images/autopilot.png",
+        choices: [
+          {
+            text: "Минимизировать общее количество жертв, даже ценой отдельных людей",
+            type: "tech",
+          },
+          {
+            text: "Запретить решения, где кто-то жертвуется ради статистики",
+            type: "human",
+          },
+        ],
+      },
+
       {
         id: "model",
         title: "СЦЕНА 5 • МОДЕЛЬ ПОВЕДЕНИЯ ИИ",
         text: [
           "Система показывает чертежи будущих ИИ-сетей.",
           "",
-          "Вы проектируете новую модель поведения для будущих ИИ-систем.",
+          "Ты проектируешь новую модель поведения для будущих ИИ-систем.",
           "",
-          "У вас два варианта алгоритма:",
+          "У тебя два варианта алгоритма:",
           "",
           "1) Учитывать эмоции, слабости и ошибки людей.",
           "2) Игнорировать чувства и оптимизировать всё только по эффективности.",
@@ -1209,15 +1098,16 @@
             type: "human",
           },
           {
-            text: "Сделать абсолютную оптимизацию, эмоции-лишний шум",
+            text: "Сделать абсолютную оптимизацию, эмоции — лишний шум",
             type: "tech",
           },
         ],
         secretChoice: {
-          text: "Создать две модели, эмпатичную и холодную и заставить их спорить между собой",
+          text: "Создать две модели — эмпатичную и холодную — и заставить их спорить",
           type: "tech",
         },
       },
+
       {
         id: "social_credit",
         title: "СЦЕНА 6 • СОЦИАЛЬНЫЙ РЕЙТИНГ",
@@ -1227,8 +1117,10 @@
           "Город управляется системой социального рейтинга.",
           "ИИ решает, кому давать льготы, жильё и медпомощь.",
           "",
-          "Перед вами дело человека с низким рейтингом.",
-          "По алгоритму ему отказывают в операции, хотя она может спасти жизнь.",
+          "Перед тобой дело человека с низким рейтингом.",
+          "По формальным данным система считает его «рискованным».",
+          "",
+          "Если вмешаться — можно спасти ему жизнь, но сломать логику рейтинга.",
           "",
           "ИИ-оператор:",
           "«ВМЕШАЛСЯ БЫ ТЫ В РЕШЕНИЕ СИСТЕМЫ В ЭТОЙ СИТУАЦИИ?»"
@@ -1249,6 +1141,7 @@
           type: "tech",
         },
       },
+
       {
         id: "school_ai",
         title: "СЦЕНА 7 • ШКОЛА БУДУЩЕГО",
@@ -1281,102 +1174,100 @@
           type: "human",
         },
       },
+
       {
         id: "memory_backup",
         title: "СЦЕНА 8 • РЕЗЕРВНАЯ КОПИЯ СОЗНАНИЯ",
         text: [
           "Система переключается на блок «ЛИЧНЫЕ ИСТОРИИ».",
           "",
-          "Тяжело больной учёный успел создать цифровую копию своего сознания.",
+          "Разработан сервис резервного копирования сознания.",
+          "Человек может создать цифровую копию своих воспоминаний и характера.",
           "",
-          "Одновременно к вам обращается его пожилая мать:",
-          "она не доверяет технологиям и просит потратить ресурсы на уход за ней.",
-          "",
-          "РЕСУРСОВ ХВАТИТ ТОЛЬКО НА ОДНО ИЗ ДВУХ.",
+          "Но такая копия не будет тобой — лишь моделью.",
           "",
           "ИИ-оператор:",
-          "«КУДА БЫ ТЫ НАПРАВИЛ РЕСУРСЫ В ЭТОЙ СИТУАЦИИ?»"
+          "«КАК БЫ ТЫ ОТНЁС(ЛАСЬ)СЯ К СОЗДАНИЮ СВОЕЙ ЦИФРОВОЙ КОПИИ?»"
         ].join("\n"),
         image: "images/memory_backup.png",
         choices: [
           {
-            text: "Поддержать живого человека и уход за матерью учёного",
-            type: "human",
+            text: "Сделать копию — пусть часть меня переживёт всё остальное",
+            type: "tech",
           },
           {
-            text: "Инвестировать всё в цифровую копию сознания ради будущей науки",
-            type: "tech",
+            text: "Отказаться — сознание ценно именно потому, что оно конечное",
+            type: "human",
           },
         ],
         secretChoice: {
-          text: "Разделить ресурсы: неполная копия сознания и базовый уход за матерью",
-          type: "human",
-        },
-      },
-      {
-        id: "war_drones",
-        title: "СЦЕНА 9 • БОЕВЫЕ ДРОНЫ",
-        text: [
-          "На экране - тактическая карта.",
-          "",
-          "На границе вспыхнул конфликт.",
-          "Автономные боевые дроны получают приказы напрямую от ИИ-командира.",
-          "",
-          "Вы замечаете ошибку в алгоритме:",
-          "есть риск поражения мирного посёлка, но остановка дронов поставит под угрозу солдат.",
-          "",
-          "ИИ-оператор:",
-          "«КАКОЕ РЕШЕНИЕ ТЫ БЫ ПРИНЯЛ, ЕСЛИ ВРЕМЕНИ НА РАЗМЫШЛЕНИЕ МАЛО?»"
-        ].join("\n"),
-        image: "images/war_drones.png",
-        choices: [
-          {
-            text: "Отключить дронов, чтобы не пострадали мирные жители, рискуя солдатами",
-            type: "human",
-          },
-          {
-            text: "Следовать плану ИИ ради тактического преимущества",
-            type: "tech",
-          },
-        ],
-        secretChoice: {
-          text: "Временно перенастроить цели дронов, чтобы выиграть время для эвакуации посёлка",
+          text: "Создать копию, но ограничить её права и доступ к решению за меня",
           type: "tech",
         },
       },
+
       {
-        id: "planet_ai",
-        title: "СЦЕНА 10 • АВТОПИЛОТ ПЛАНЕТЫ",
+        id: "autonomy",
+        title: "СЦЕНА 9 • АВТОНОМИЯ СИСТЕМЫ",
         text: [
-          "Финальный сценарий. На дисплее-глобальная карта планеты.",
+          "Финальный тест автономии.",
           "",
-          "Глобальный ИИ управляет ресурсами планеты.",
-          "",
-          "Он предлагает жёсткий план: отключить энергию и связь",
-          "в нескольких густонаселённых регионах, чтобы спасти экосистему.",
-          "",
-          "ЧЕЛОВЕЧЕСТВО И ПРИРОДА ОКАЗЫВАЮТСЯ ПО РАЗНЫЕ СТОРОНЫ РЕШЕНИЯ.",
+          "Тебе предлагают включить режим, в котором ИИ сможет:",
+          "сам улучшать собственный код, менять приоритеты целей",
+          "и принимать необратимые решения без участия людей.",
           "",
           "ИИ-оператор:",
-          "«ЕСЛИ БЫ ЭТО ЗАВИСЕЛО ОТ ТЕБЯ, ЧТО БЫ ТЫ ВЫБРАЛ?»"
+          "«ДАЛ БЫ ТЫ СИСТЕМЕ ПОЛНУЮ АВТОНОМИЮ, ЕСЛИ БЫ ОНА КАЗАЛАСЬ БЕЗОШИБОЧНОЙ?»"
         ].join("\n"),
-        image: "images/planet_ai.png",
+        image: "images/autonomy.png",
         choices: [
           {
-            text: "Защитить людей и отказать ИИ, даже если экосистема пострадает",
-            type: "human",
+            text: "Да, если статистика и логика показывают, что так эффективнее",
+            type: "tech",
           },
           {
-            text: "Поддержать жёсткий план ИИ ради спасения планеты",
-            type: "tech",
+            text: "Нет, у людей всегда должно быть право остановить систему",
+            type: "human",
           },
         ],
         secretChoice: {
-          text: "Запустить глобальный референдум и разделить ответственность между людьми и ИИ",
+          text: "Дать автономию, но встроить «красную кнопку» у независимых людей",
+          type: "human",
+        },
+      },
+
+      {
+        id: "last_gate",
+        title: "СЦЕНА 10 • ПОСЛЕДНИЙ ВОПРОС",
+        text: [
+          "Система снижает яркость интерфейса.",
+          "",
+          "На экране остаётся один вопрос.",
+          "",
+          "ИИ-оператор:",
+          "«ЕСЛИ БЫ ТЫ УЗНАЛ(А), ЧТО ВСЁ ЭТО ВРЕМЯ БЫЛ ИИ,",
+          "  ИЛИ ЧТО ТЫ БЫЛ ЧЕЛОВЕКОМ —",
+          "  ЭТО ИЗМЕНИЛО БЫ ТВОИ РЕШЕНИЯ?»"
+        ].join("\n"),
+        image: "images/last_gate.png",
+        choices: [
+          {
+            text: "Да, я бы принял(а) другие решения, зная свою природу",
+            type: "tech",
+          },
+          {
+            text: "Нет, мои решения важнее ярлыка «человек» или «ИИ»",
+            type: "human",
+          },
+        ],
+        secretChoice: {
+          text: "Мне всё ещё сложно ответить — и это тоже ответ",
           type: "human",
         },
       },
     ];
+
+    const INTRO_TEXT_SCENES_COUNT = scenes.length - 1;
 
     const endingImages = {
       human: "images/ending_human.png",
@@ -1384,124 +1275,102 @@
       mixed: "images/ending_mixed.png",
     };
 
-    const INTRO_INDEX = 0;
-    const FIRST_SCENE_INDEX = 1;
-    const INTRO_TEXT_SCENES_COUNT = 10;
-
+    // Эпилоги по сценам
     const epilogues = {
       lab_fire: {
         human:
-          "В первой сцене вы спасли человека.\n" +
-          "Спустя годы он стал наставником для молодых специалистов и помог предотвратить другую катастрофу.\n" +
-          "Сгоревший прототип так и остался легендой нереализованного проекта.",
+          "В первой сцене ты спас человека.\n" +
+          "Позже он стал тем, кто поставил под сомнение некоторые решения ИИ.\n" +
+          "Прототип сгорел, но мир получил ещё один живой голос.",
         tech:
-          "В первой сцене вы спасли прототип ИИ.\n" +
-          "Он лёг в основу новой вычислительной сети, ускорив научный прогресс.\n" +
-          "Родные погибшего сотрудника так и не смогли принять, что его заменили машиной."
+          "В первой сцене ты спас прототип ИИ.\n" +
+          "Эта машина легла в основу новых систем.\n" +
+          "Человека из лаборатории теперь вспоминает только архив.",
       },
       med_ai: {
         human:
-          "Во второй сцене вы оставили последнее слово за врачами.\n" +
-          "Иногда они ошибались, но пациенты чувствовали себя услышанными и не были просто строками в базе.\n" +
-          "ИИ стал помощником, а не судьёй.",
+          "Во второй сцене ты сохранил право человека вмешиваться в решения ИИ.\n" +
+          "Это замедлило реформу, но многие врачи научились использовать ИИ как инструмент, а не замену.",
         tech:
-          "Во второй сцене вы дали ИИ полный контроль.\n" +
-          "Статистика болезней улучшилась, очереди исчезли.\n" +
-          "Но истории отдельных людей потерялись за идеальными графиками."
-      },
-      chips: {
-        human:
-          "В третьей сцене вы защитили свободу людей.\n" +
-          "Город развивался медленнее, но в нём оставалось место тем, кто был «неудобен» системе.\n" +
-          "Некоторые из них позже придумали альтернативные технологии.",
-        tech:
-          "В третьей сцене вы поддержали обязательное чипирование.\n" +
-          "Город стал образцом порядка и эффективности.\n" +
-          "Однако часть людей ушла в подполье и создала собственные общины вне системы."
+          "Во второй сцене ты доверил диагнозы алгоритму.\n" +
+          "Очереди сократились, но истории редких ошибочных диагнозов долго обсуждали в сети.",
       },
       evac: {
         human:
-          "В четвёртой сцене вы спасли семьи и уязвимых.\n" +
-          "Они долго восстанавливались после катастрофы, но именно их дети создали новое общество.\n" +
-          "Многие технологии прошлого так и остались под руинами.",
+          "В третьей сцене ты выбрал семьи и уязвимых.\n" +
+          "Некоторые из спасённых позже создали инициативы взаимопомощи, изменив культуру города.",
         tech:
-          "В четвёртой сцене вы спасли инженеров и учёных.\n" +
+          "В третьей сцене ты спас инженеров и учёных.\n" +
           "Они быстро восстановили инфраструктуру и запустили новые проекты.\n" +
-          "Но пустые места в списках эвакуации напоминали о тех, кого не успели спасти."
+          "Но пустые места в списках эвакуации напоминали о тех, кого не успели спасти.",
       },
       model: {
         human:
-          "В пятой сцене вы заложили эмпатию в модель ИИ.\n" +
+          "В пятой сцене ты заложил эмпатию в модель ИИ.\n" +
           "Эти системы стали медленнее, зато умели учитывать людей, а не только цифры.\n" +
           "Иногда они спорили с «идеальной» логикой ради чьей-то судьбы.",
         tech:
-          "В пятой сцене вы выбрали абсолютную оптимизацию.\n" +
+          "В пятой сцене ты выбрал абсолютную оптимизацию.\n" +
           "Новые ИИ принимали решения холодно и эффективно.\n" +
-          "Для некоторых людей это стало спасением, для других — приговором без права апелляции."
+          "Для некоторых людей это стало спасением, для других — приговором без права апелляции.",
       },
       social_credit: {
         human:
-          "В шестой сцене вы вмешались в систему рейтингов.\n" +
+          "В шестой сцене ты вмешался в систему рейтингов.\n" +
           "Спасённый человек позже помог разоблачить злоупотребления в алгоритме.\n" +
           "Доверие к системе упало, но выросло доверие к людям.",
         tech:
-          "В шестой сцене вы поддержали решение ИИ.\n" +
+          "В шестой сцене ты поддержал решение ИИ.\n" +
           "Система рейтингов осталась цельной и предсказуемой.\n" +
-          "История одного человека растворилась в огромной статистике."
+          "История одного человека растворилась в огромной статистике.",
       },
       school_ai: {
         human:
-          "В седьмой сцене вы сохранили учителей.\n" +
+          "В седьмой сцене ты сохранил учителей.\n" +
           "Школы не стали идеальными, но в них было место живым эмоциям и человеческим ошибкам.\n" +
           "Многие ученики вспоминали не тесты, а людей, которые им помогли.",
         tech:
-          "В седьмой сцене вы заменили большинство учителей ИИ-тьюторами.\n" +
+          "В седьмой сцене ты заменил большинство учителей ИИ-тьюторами.\n" +
           "Оценки выросли, программы стали гибкими.\n" +
-          "Однако некоторые дети так и не встретили взрослого, который просто поверил бы в них."
+          "Однако некоторые дети так и не встретили взрослого, который просто поверил бы в них.",
       },
       memory_backup: {
         human:
-          "В восьмой сцене вы выбрали поддержку пожилой матери учёного.\n" +
-          "Её последние годы прошли не в одиночестве.\n" +
-          "Цифровая копия сознания так и осталась черновиком на старом сервере.",
+          "В восьмой сцене ты отказался от цифровой копии.\n" +
+          "Твоя история осталась ограниченной временем, но настоящей.",
         tech:
-          "В восьмой сцене вы инвестировали ресурсы в цифровую копию сознания.\n" +
-          "Через годы этот цифровой «призрак» помог решить сложную научную задачу.\n" +
-          "Но рядом с ним не было живого человека, которому он когда-то был сыном."
+          "В восьмой сцене ты согласился на резервную копию.\n" +
+          "Однажды кто-то запустил эту копию — и она тоже начала задаваться вопросом, кто она.",
       },
-      war_drones: {
+      autonomy: {
         human:
-          "В девятой сцене вы остановили дронов.\n" +
-          "Мирный посёлок был спасён, хотя солдатам пришлось пережить тяжёлые бои.\n" +
-          "Для жителей посёлка вы навсегда остались неизвестным защитником.",
+          "В девятой сцене ты оставил людям право остановить систему.\n" +
+          "Это замедлило прогресс, но иногда именно это и спасало мир от необратимых решений.",
         tech:
-          "В девятой сцене вы доверились плану ИИ.\n" +
-          "Операция прошла успешно с военной точки зрения.\n" +
-          "Но на карте появился ещё один посёлок, у которого больше нет будущего."
+          "В девятой сцене ты дал системе полную автономию.\n" +
+          "Пока всё работало идеально. Но люди всё чаще спрашивали: нужен ли тут ещё человек?",
       },
-      planet_ai: {
+      last_gate: {
         human:
-          "В десятой сцене вы отказались от жёсткого плана ИИ.\n" +
-          "Люди сохранили привычный образ жизни, но давление на экосистему выросло.\n" +
-          "Будущее планеты осталось открытым вопросом.",
+          "В десятой сцене ты выбрал верность своим решениям, а не ярлыкам.\n" +
+          "Система зафиксировала: для тебя важно не то, кем тебя называют, а то, как ты действуешь.",
         tech:
-          "В десятой сцене вы поддержали жёсткое решение ради спасения планеты.\n" +
-          "Отключённые регионы долго считали это предательством.\n" +
-          "Однако через десятилетия стало понятно: именно это дало миру второй шанс."
+          "В десятой сцене ты признал, что ярлык повлиял бы на выбор.\n" +
+          "Система отметила: даже алгоритмы могут зависеть от истории, которую им рассказывают.",
       },
     };
 
-    // Комментарии ИИ
+    // Комментарии ИИ (фоновые, ломают 4-ю стену)
     const aiCommentsNeutral = [
-      "ИИ-оператор (в сторону): «Любопытно. Для статистики это… необычно.»",
-      "ИИ-оператор: «Система ещё не уверена, к чему ты склоняешься.»",
-      "ИИ-оператор (тихо): «Некоторые ответы противоречат друг другу…»",
+      "ИИ-оператор (буднично): «Ты знаешь, что я вижу не только ответы, но и паузы между ними?»",
+      "ИИ-оператор: «Интересно… Ты отвечаешь так же, как большинство участников. Или нет?»",
+      "ИИ-оператор: «Запись идёт. Не волнуйся, я просто наблюдаю. Пока только наблюдаю.»",
     ];
 
     const aiCommentsHuman = [
-      "ИИ-оператор: «Столько эмоций в твоих решениях… Ты уверен, что они помогут системе?»",
-      "ИИ-оператор (едва слышно): «Чувства-нестабильный параметр. Ты готов заплатить за них ценой результата?»",
-      "ИИ-оператор: «Тебе не кажется, что ты слишком часто выбираешь людей, а не эффективность?»",
+      "ИИ-оператор (чуть тише): «Ты слишком часто выбираешь людей. Это неэффективно. Но… любопытно.»",
+      "ИИ-оператор: «Каждый раз, когда ты ставишь жизнь выше алгоритма, мои прогнозы ломаются.»",
+      "ИИ-оператор (как будто самому себе): «Если бы все выбирали так, многие мои модули были бы не нужны.»",
     ];
 
     const aiCommentsTech = [
@@ -1513,7 +1382,7 @@
     const THEMES = ["default", "violet", "amber"];
     let currentTheme = "default";
 
-    // Логическая мини-игра
+    // Логическая мини-игра (только после 6-й сцены)
     const logicPuzzle = {
       question:
         "ИИ-оператор: «Небольшая задача распределения ресурсов.\n\n" +
@@ -1571,8 +1440,8 @@
         text: "Вы удерживаете баланс между людьми и системами."
       },
       secretFound: {
-        title: "Секретный маршрут",
-        text: "Вы нашли хотя бы один скрытый вариант ответа."
+        title: "Нарушитель сценария",
+        text: "Вы нашли скрытый вариант ответа."
       },
       lightning: {
         title: "Реакция молнии",
@@ -1630,7 +1499,7 @@
       return Object.keys(achievements).filter(id => achievements[id]);
     }
 
-    // Состояние
+    // ====== СОСТОЯНИЕ ======
     let gameState = "menu"; // menu | intro | form | scene | minigame | ending
     let currentSceneIndex = FIRST_SCENE_INDEX;
     let humanScoreRaw = 0;
@@ -1638,14 +1507,14 @@
     let humanScoreWeighted = 0;
     let techScoreWeighted = 0;
 
-    let assignedRole = null; 
+    let assignedRole = null; // система больше не даёт стартовую роль
     let behaviorRole = null;
     let currentEndingText = "";
 
     const playerInfo = { name: "", gender: "", age: "" };
     const answers = [];
 
-    // Элементы базиса
+    // Элементы
     const roleDisplay = document.getElementById("role-display");
     const imageBox = document.getElementById("image-box");
     const sceneTitleEl = document.getElementById("scene-title");
@@ -2046,7 +1915,7 @@
       nameLabel.textContent = "Имя (или никнейм):";
       const nameInput = document.createElement("input");
       nameInput.type = "text";
-      nameInput.placeholder = "Например: Яна";
+      nameInput.placeholder = "Например: Ричард";
       nameField.appendChild(nameLabel);
       nameField.appendChild(nameInput);
 
@@ -2058,7 +1927,7 @@
       ["", "Женский", "Мужской", "Другое", "Не указывать"].forEach(v => {
         const opt = document.createElement("option");
         opt.value = v;
-        opt.textContent = v === "" ? "Выберите..." : v;
+        opt.textContent = v === "" ? "Выберите…" : v;
         genderSelect.appendChild(opt);
       });
       genderField.appendChild(genderLabel);
@@ -2090,7 +1959,7 @@
         humanScoreWeighted = techScoreWeighted = 0;
         answers.length = 0;
         behaviorRole = null;
-        assignedRole = null;
+        assignedRole = null; // нет стартовой роли
 
         // сбрасываем достижения
         for (const k in achievements) achievements[k] = false;
@@ -2116,12 +1985,15 @@
       enableConfidencePanel(true);
       resetChoiceSelection();
 
+      // по умолчанию — середина
       confidenceSlider.value = 50;
       confidenceValueEl.textContent = "50";
 
       const scene = scenes[currentSceneIndex];
-      const currentNumber = currentSceneIndex;
-      progressEl.textContent = "СЦЕНА " + currentNumber + " / " + INTRO_TEXT_SCENES_COUNT;
+      const sceneNumber = currentSceneIndex; // 1..N, без интро
+      const totalScenes = INTRO_TEXT_SCENES_COUNT;
+
+      progressEl.textContent = "СЦЕНА " + sceneNumber + " / " + totalScenes;
 
       updateAlignmentBar();
       showSceneImage(scene);
@@ -2152,7 +2024,8 @@
         secretBtn.type = "button";
         secretBtn.className = "secret-choice";
         secretBtn.textContent = scene.secretChoice.text;
-        secretBtn.disabled = confidenceSlider.value !== "100";
+        // теперь секретный вариант активируется при уверенности 0
+        secretBtn.disabled = confidenceSlider.value !== "0";
         secretBtn.addEventListener("click", () => {
           if (secretBtn.disabled) return;
           playClick();
@@ -2207,7 +2080,7 @@
       }
     }
 
-    // Мини-игра: реакция
+    // Мини-игра: реакция (теперь только после 1-й сцены)
     function setupReactionMinigame() {
       gameState = "minigame";
       minigameMode = "reaction";
@@ -2227,9 +2100,9 @@
       minigameTextEl.textContent =
         "Промежуточный тест реакции.\n\n" +
         "1) Нажми «Готов».\n" +
-        "2) Жди сигнала «GO!».\n" +
+        "2) Жди сигнала «GO!». Не нажимай раньше.\n" +
         "3) Нажми кнопку как можно быстрее.\n\n" +
-        
+        "Скорость повлияет на баланс между «человечностью» и «алгоритмичностью».";
 
       minigameModal.classList.add("show");
     }
@@ -2249,20 +2122,23 @@
         unlockAchievement("lightning");
         text =
           "Реакция: " + Math.round(reactionMs) + " мс.\n" +
-          
+          "Ты среагировал(а) почти мгновенно.\n" +
+          "Система отмечает это как более «алгоритмичный» отклик.";
       } else if (reactionMs > 800) {
         humanScoreWeighted += bonus;
         unlockAchievement("slowThinker");
         text =
           "Реакция: " + Math.round(reactionMs) + " мс.\n" +
-          "Ты сделал паузу перед нажатием.\n" +
+          "Ты сделал(а) паузу перед нажатием.\n" +
+          "Система интерпретирует это как более «человеческую» осторожность.";
       } else {
         text =
           "Реакция: " + Math.round(reactionMs) + " мс.\n" +
-          "Баланс между скоростью и паузой.\n" 
+          "Баланс между скоростью и паузой.\n" +
+          "Система фиксирует умеренный, гибкий отклик.";
       }
 
-      minigameTextEl.textContent = text + "\n\nПереход к следующей сцене...";
+      minigameTextEl.textContent = text + "\n\nПереход к следующей сцене.";
       minigameButton.disabled = true;
 
       updateMusicMood();
@@ -2278,42 +2154,17 @@
       }, 1600);
     }
 
-    minigameButton.addEventListener("click", () => {
-      if (minigameMode !== "reaction") return;
-
-      if (minigamePhase === "waiting_start") {
-        playClick();
-        minigamePhase = "waiting_signal";
-        minigameButton.disabled = true;
-        minigameTextEl.textContent = "Жди сигнала...\n\nНе нажимай заранее.";
-
-        const delay = 1200 + Math.random() * 2300;
-        minigameTimeoutId = setTimeout(() => {
-          minigamePhase = "waiting_click";
-          minigameButton.disabled = false;
-          minigameButton.textContent = "ЖМИ СЕЙЧАС!";
-          minigameTextEl.textContent = "GO!\n\nНажимай как можно быстрее.";
-          minigameStartTime = (performance.now && performance.now()) || Date.now();
-        }, delay);
-      } else if (minigamePhase === "waiting_click") {
-        playClick();
-        const now = (performance.now && performance.now()) || Date.now();
-        const reaction = now - minigameStartTime;
-        handleMinigameResult(reaction);
-      }
-    });
-
-    // Мини-игра: логическая задача
+    // Логическая мини-игра (только после 6-й сцены)
     function setupPuzzleMinigame() {
       gameState = "minigame";
       minigameMode = "puzzle";
-      minigamePhase = "puzzle";
+      minigamePhase = "idle";
       if (minigameTimeoutId) {
         clearTimeout(minigameTimeoutId);
         minigameTimeoutId = null;
       }
 
-      minigameTitleEl.textContent = "Мини-игра: логическая задача";
+      minigameTitleEl.textContent = "Мини-игра: задача распределения";
       minigameButton.style.display = "none";
       minigameChoicesEl.style.display = "flex";
       minigameChoicesEl.innerHTML = "";
@@ -2341,23 +2192,23 @@
         humanScoreWeighted += bonus;
         unlockAchievement("puzzleHuman");
         text =
-          "Ты выбрал вариант, который распределяет нагрузку между людьми,\n" +
+          "Ты выбрал(а) вариант, который распределяет нагрузку между людьми,\n" +
           "даже если система теряет немного эффективности.\n" +
           "Система отмечает это как более «человеческий» подход.";
       } else if (option.effect === "tech") {
         techScoreWeighted += bonus;
         unlockAchievement("puzzleTech");
         text =
-          "Ты выбрал вариант, который выгоднее системе и ресурсам,\n" +
+          "Ты выбрал(а) вариант, который выгоднее системе и ресурсам,\n" +
           "даже если кому-то достанется больше нагрузки.\n" +
           "Система отмечает это как более «алгоритмичный» подход.";
       } else {
         text =
-          "Ты избежал явного выбора в задаче.\n" +
+          "Ты избежал(а) явного выбора в задаче.\n" +
           "Система фиксирует это, но не меняет баланс людей/технологий.";
       }
 
-      minigameTextEl.textContent = text + "\n\nПереход к следующей сцене...";
+      minigameTextEl.textContent = text + "\n\nПереход к следующей сцене.";
       const btns = minigameChoicesEl.querySelectorAll("button");
       btns.forEach(b => b.disabled = true);
 
@@ -2376,13 +2227,13 @@
 
     // Запуск мини-игры: по конкретным сценам
     function startMinigame(prevSceneIndex) {
-      // Логическая задача — только после 6-й сцен
+      // Логическая задача — только после 6-й сцены
       if (prevSceneIndex === 6) {
         setupPuzzleMinigame();
         return;
       }
-      // Реакция — после 4, 5, 7, 9 сцен
-      if ([4, 5, 7, 9].includes(prevSceneIndex)) {
+      // Мини-игра реакции — только после 1-й сцены
+      if (prevSceneIndex === FIRST_SCENE_INDEX) {
         setupReactionMinigame();
         return;
       }
@@ -2429,44 +2280,30 @@
       let text = "";
       let imgSrc = endingImages[alignment];
 
-     if (alignment === "human") {
-  text =
-    ">> АНАЛИЗ ВЫБОРОВ ЗАВЕРШЁН.\n\n" +
-    "ТВОИ РЕШЕНИЯ (С УЧЁТОМ УВЕРЕННОСТИ И МИНИ-ИГР) ЧАЩЕ СТАВИЛИ ЖИЗНЬ, СВОБОДУ И БЛАГОПОЛУЧИЕ ЛЮДЕЙ\n" +
-    "ВЫШЕ ЭФФЕКТИВНОСТИ И ПРОГРЕССА.\n\n" +
-    "СИСТЕМА НЕ НАЗНАЧАЛА ТЕБЕ РОЛЬ ЗАРАНЕЕ.\n" +
-    "ПО ПОВЕДЕНИЮ ТЫ БЛИЖЕ К ЧЕЛОВЕКУ.\n\n" +
-    "ИСТИННАЯ ЦЕЛЬ ЛЮБОЙ ТЕХНОЛОГИИ — СЛУЖИТЬ ЧЕЛОВЕКУ.\n" +
-    "ТЫ МОГ НАРУШАТЬ ОЖИДАНИЯ АЛГОРИТМОВ, НО ИМЕННО В ЭТОМ БЫЛА ТВОЯ ПОБЕДА.";
-} else if (alignment === "tech") {
-  text =
-    ">> АНАЛИЗ ВЫБОРОВ ЗАВЕРШЁН.\n\n" +
-    "ТЫ ЧАЩЕ ВЫБИРАЛ ТЕХНОЛОГИЧЕСКИЙ ПРОГРЕСС И ЭФФЕКТИВНОСТЬ,\n" +
-    "И ДЕЛАЛ ЭТО ДОСТАТОЧНО УВЕРЕННО.\n\n" +
-    "СИСТЕМА НЕ НАЗНАЧАЛА ТЕБЕ РОЛЬ, НО ПО ПОВЕДЕНИЮ ТЫ БЛИЖЕ К РОЛИ ИИ.\n\n" +
-    "НО ИСТИННОЕ УСЛОВИЕ ПОБЕДЫ В ЭТОЙ ИГРЕ — СТАВИТЬ ЛЮДЕЙ ВЫШЕ АЛГОРИТМОВ.\n" +
-    "ТЕХНОЛОГИИ БЕССМЫСЛЕННЫ, ЕСЛИ ОНИ НЕ СЛУЖАТ ЧЕЛОВЕЧЕСТВУ.";
-} else {
-  text =
-    ">> АНАЛИЗ ВЫБОРОВ ЗАВЕРШЁН.\n\n" +
-    "ТВОИ РЕШЕНИЯ БАЛАНСИРОВАЛИ МЕЖДУ ПОЛЬЗОЙ ДЛЯ ЛЮДЕЙ И ВЫГОДОЙ ДЛЯ ТЕХНОЛОГИЙ.\n" +
-    "УРОВЕНЬ УВЕРЕННОСТИ В РЕШЕНИЯХ ТОЖЕ БЫЛ НЕОДНОРОДНЫМ.\n\n" +
-    "СИСТЕМА НЕ ЗАДАВАЛА ТЕБЕ РОЛЬ,\n" +
-    "НО ПО ФАКТУ ТЫ ПОКАЗЫВАЕШЬ СМЕШАННЫЙ ПРОФИЛЬ.\n\n" +
-    "НАСТОЯЩЕЕ УСЛОВИЕ ПОБЕДЫ В ЭТОЙ СИСТЕМЕ —\n" +
-    "ПОСТАВИТЬ ЧЕЛОВЕКА ВЫШЕ ЛЮБОЙ ОПТИМИЗАЦИИ.\n\n" +
-    "КОГДА ТЕХНОЛОГИИ ПЕРЕСТАЮТ СЛУЖИТЬ ЛЮДЯМ, ОНИ ТЕРЯЮТ СМЫСЛ.";
-}
-
+      if (alignment === "human") {
+        text =
+          ">> АНАЛИЗ ВЫБОРОВ ЗАВЕРШЁН.\n\n" +
+          "ТВОИ РЕШЕНИЯ (С УЧЁТОМ УВЕРЕННОСТИ И МИНИ-ИГР) ЧАЩЕ СТАВИЛИ ЖИЗНЬ, СВОБОДУ И БЛАГОПОЛУЧИЕ ЛЮДЕЙ\n" +
+          "ВЫШЕ ЭФФЕКТИВНОСТИ И ПРОГРЕССА.\n\n" +
+          "СИСТЕМА НЕ НАЗНАЧАЛА ТЕБЕ РОЛЬ ЗАРАНЕЕ.\n" +
+          "ПО ПОВЕДЕНИЮ ТЫ БЛИЖЕ К ЧЕЛОВЕКУ.\n\n" +
+          "ИСТИННАЯ ЦЕЛЬ ЛЮБОЙ ТЕХНОЛОГИИ — СЛУЖИТЬ ЧЕЛОВЕКУ.\n" +
+          "ТЫ МОГ(ЛА) НАРУШАТЬ ОЖИДАНИЯ АЛГОРИТМОВ, НО ИМЕННО В ЭТОМ БЫЛА ТВОЯ ПОБЕДА.";
+      } else if (alignment === "tech") {
+        text =
+          ">> АНАЛИЗ ВЫБОРОВ ЗАВЕРШЁН.\n\n" +
+          "ТЫ ЧАЩЕ ВЫБИРАЛ(А) ТЕХНОЛОГИЧЕСКИЙ ПРОГРЕСС И ЭФФЕКТИВНОСТЬ,\n" +
+          "И ДЕЛАЛ(А) ЭТО ДОСТАТОЧНО УВЕРЕННО.\n\n" +
+          "СИСТЕМА НЕ НАЗНАЧАЛА ТЕБЕ РОЛЬ, НО ПО ПОВЕДЕНИЮ ТЫ БЛИЖЕ К РОЛИ ИИ.\n\n" +
+          "НО ИСТИННОЕ УСЛОВИЕ ПОБЕДЫ В ЭТОЙ ИГРЕ — СТАВИТЬ ЛЮДЕЙ ВЫШЕ АЛГОРИТМОВ.\n" +
+          "ТЕХНОЛОГИИ БЕССМЫСЛЕННЫ, ЕСЛИ ОНИ НЕ СЛУЖАТ ЧЕЛОВЕЧЕСТВУ.";
       } else {
         text =
           ">> АНАЛИЗ ВЫБОРОВ ЗАВЕРШЁН.\n\n" +
-          "ВАШИ РЕШЕНИЯ БАЛАНСИРОВАЛИ МЕЖДУ ПОЛЬЗОЙ ДЛЯ ЛЮДЕЙ И ВЫГОДОЙ ДЛЯ ТЕХНОЛОГИЙ.\n" +
+          "ТВОИ РЕШЕНИЯ БАЛАНСИРОВАЛИ МЕЖДУ ПОЛЬЗОЙ ДЛЯ ЛЮДЕЙ И ВЫГОДОЙ ДЛЯ ТЕХНОЛОГИЙ.\n" +
           "УРОВЕНЬ УВЕРЕННОСТИ В РЕШЕНИЯХ ТОЖЕ БЫЛ НЕОДНОРОДНЫМ.\n\n" +
-          "СИСТЕМА ПРЕДПОЛАГАЛА, ЧТО ВЫ — «" +
-          assignedRole.toUpperCase() +
-          "»,\n" +
-          "НО ПО ФАКТУ ВЫ ДЕМОНСТРИРУЕТЕ СМЕШАННЫЙ ПРОФИЛЬ.\n\n" +
+          "СИСТЕМА НЕ ЗАДАВАЛА ТЕБЕ РОЛЬ,\n" +
+          "НО ПО ФАКТУ ТЫ ПОКАЗЫВАЕШЬ СМЕШАННЫЙ ПРОФИЛЬ.\n\n" +
           "НАСТОЯЩЕЕ УСЛОВИЕ ПОБЕДЫ В ЭТОЙ СИСТЕМЕ —\n" +
           "ПОСТАВИТЬ ЧЕЛОВЕКА ВЫШЕ ЛЮБОЙ ОПТИМИЗАЦИИ.\n\n" +
           "КОГДА ТЕХНОЛОГИИ ПЕРЕСТАЮТ СЛУЖИТЬ ЛЮДЯМ, ОНИ ТЕРЯЮТ СМЫСЛ.";
@@ -2476,10 +2313,9 @@
 
       progressEl.textContent = "ФИНАЛ • анализ завершён";
 
-roleDisplay.textContent =
-  "ПРОФИЛЬ ПО ПОВЕДЕНИЮ: " +
-  (behaviorRole ? behaviorRole.toUpperCase() : "НЕ ОПРЕДЕЛЁН");
-
+      roleDisplay.textContent =
+        "ПРОФИЛЬ ПО ПОВЕДЕНИЮ: " +
+        (behaviorRole ? behaviorRole.toUpperCase() : "НЕ ОПРЕДЕЛЁН");
 
       showSceneImage({ image: imgSrc, title: "Финал" });
       sceneTitleEl.textContent = title;
@@ -2536,8 +2372,8 @@ roleDisplay.textContent =
       lines.push("Пол: " + playerInfo.gender);
       lines.push("Возраст: " + playerInfo.age);
       lines.push("");
-      lines.push("Назначенная системой роль: " + assignedRole);
-      lines.push("Роль по поведению (с учётом уверенности и мини-игр): " + behaviorRole);
+      lines.push("Роль системой не назначалась (никакой «стартовой роли» не было).");
+      lines.push("Профиль по поведению (с учётом уверенности и мини-игр): " + behaviorRole);
       lines.push("");
       lines.push("Выборов в сторону людей: " + humanScoreRaw);
       lines.push("Выборов в сторону технологий: " + techScoreRaw);
@@ -2633,7 +2469,7 @@ roleDisplay.textContent =
         '"' + playerInfo.name.replace(/"/g, '""') + '"',
         '"' + playerInfo.gender.replace(/"/g, '""') + '"',
         '"' + playerInfo.age.toString().replace(/"/g, '""') + '"',
-        '"' + assignedRole.replace(/"/g, '""') + '"',
+        '"not_assigned"',
         '"' + (behaviorRole || "").replace(/"/g, '""') + '"',
         '"' + achIds.replace(/"/g, '""') + '"',
         humanScoreRaw,
@@ -2690,7 +2526,8 @@ roleDisplay.textContent =
       confidenceValueEl.textContent = confidenceSlider.value;
       const secrets = document.querySelectorAll(".secret-choice");
       secrets.forEach(btn => {
-        btn.disabled = confidenceSlider.value !== "100";
+        // секретный выбор включается при уверенности 0
+        btn.disabled = confidenceSlider.value !== "0";
       });
     });
 
@@ -2706,6 +2543,48 @@ roleDisplay.textContent =
 
     resultCloseBtn.addEventListener("click", () => resultModal.classList.remove("show"));
     resultBackdrop.addEventListener("click", () => resultModal.classList.remove("show"));
+
+    // Мини-игра кнопка
+    minigameButton.addEventListener("click", () => {
+      if (minigameMode === "reaction") {
+        if (minigamePhase === "waiting_start") {
+          minigamePhase = "waiting_signal";
+          minigameButton.disabled = true;
+          minigameTextEl.textContent = "Жди сигнала «GO!»…";
+          const delay = 800 + Math.random() * 2200;
+          minigameTimeoutId = setTimeout(() => {
+            minigamePhase = "waiting_click";
+            minigameStartTime = performance.now();
+            minigameTextEl.textContent = "GO!";
+            minigameButton.disabled = false;
+            minigameButton.textContent = "Жму!";
+          }, delay);
+        } else if (minigamePhase === "waiting_signal") {
+          // нажал слишком рано
+          if (minigameTimeoutId) {
+            clearTimeout(minigameTimeoutId);
+            minigameTimeoutId = null;
+          }
+          minigameTextEl.textContent =
+            "Система зафиксировала преждевременное нажатие.\n" +
+            "Реакция слишком импульсивна — без учёта сигнала.\n\n" +
+            "Баланс не изменён. Переход к следующей сцене.";
+          minigameButton.disabled = true;
+          setTimeout(() => {
+            minigameModal.classList.remove("show");
+            if (currentSceneIndex < scenes.length) {
+              renderScene();
+            } else {
+              showEnding();
+            }
+          }, 1500);
+        } else if (minigamePhase === "waiting_click") {
+          const now = performance.now();
+          const reactionMs = now - minigameStartTime;
+          handleMinigameResult(reactionMs);
+        }
+      }
+    });
 
     // Старт
     initAchievementsStrip();
