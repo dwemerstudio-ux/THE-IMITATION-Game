@@ -3549,70 +3549,111 @@ function startServerHum() {
       showSceneImage({ image: "images/menu.png", title: "Главное меню" });
       sceneTitleEl.textContent = "IMI-SYS_01 • МЕНЮ СИМУЛЯЦИИ";
 
-      const text = [
-        "Добро пожаловать в экспериментальную ИГРУ В ИМИТАЦИЮ.",
-        "",
-        "Система будет наблюдать за вашими решениями,",
-        "но до самого конца вы не узнаете, КТО ВЫ:",
-        "ЧЕЛОВЕК или ИИ.",
-        "",
-        "• «Начать симуляцию» — полноценное прохождение.",
-        "• «Просмотр достижений» — список возможных ачивок.",
-      ].join("\n");
-      typeText(sceneTextEl, text);
+      const pages = [
+        [
+          "Добро пожаловать, пользователь.",
+          "Система активирована.",
+          "Ваши данные обрабатываются...",
+          "Ошибка: идентичность не определена.",
+          "Повторяю - идентичность не определена.",
+          "",
+          "Пауза. На экране пробегают строки кода - будто игра ищет, кто ты.",
+          "",
+          "Внимание: система не может определить, кем вы являетесь.",
+          "Вы человек…или алгоритм?"
+        ].join("\n"),
+        [
+          "Роль была назначена заранее.",
+          "Но ошибка в данных нарушила распределение.",
+          "Теперь всё зависит от ваших решений."
+        ].join("\n"),
+        [
+          "Впереди вас ждут выборы. Ни один из них не безопасен.",
+          "Некоторые покажутся вам знакомыми, другие — невозможными.",
+          "Но будьте внимательны: каждое действие приближает вас либо к человечности… либо к логике машин."
+        ].join("\n"),
+        [
+          "Если хотите выжить в этой среде —",
+          "выбирайте не только умом.",
+          "",
+          "Игра в имитацию активирована.",
+          "Введите первый выбор."
+        ].join("\n")
+      ];
 
-      choicesEl.innerHTML = "";
+      let step = 0;
 
-      const themeBox = document.createElement("div");
-      themeBox.id = "theme-box";
-      const themeLabel = document.createElement("span");
-      themeLabel.textContent = "Тема интерфейса:";
-      themeBox.appendChild(themeLabel);
+      function renderStep() {
+        const text = pages[Math.max(0, Math.min(step, pages.length - 1))];
+        typeText(sceneTextEl, text);
+        choicesEl.innerHTML = "";
 
-      function makeThemeChip(id, label) {
-        const chip = document.createElement("button");
-        chip.type = "button";
-        chip.className = "theme-chip";
-        chip.textContent = label;
-        if (currentTheme === id) chip.classList.add("active");
-        chip.addEventListener("click", () => {
-          applyTheme(id);
-          themeBox.querySelectorAll(".theme-chip").forEach(c => c.classList.remove("active"));
-          chip.classList.add("active");
+        if (step < pages.length - 1) {
+          const nextBtn = document.createElement("button");
+          nextBtn.className = "choice-btn";
+          nextBtn.style.setProperty("--card-rot", "0deg");
+          nextBtn.textContent = "Далее";
+          nextBtn.addEventListener("click", () => {
+            playClick();
+            step++;
+            renderStep();
+          });
+          choicesEl.appendChild(nextBtn);
+          return;
+        }
+
+        const achBtn = document.createElement("button");
+        achBtn.className = "choice-btn";
+        achBtn.style.setProperty("--card-rot", "-1.2deg");
+        achBtn.textContent = "Просмотр достижений";
+        achBtn.addEventListener("click", () => {
+          playClick();
+          showAchievementsModal();
         });
-        return chip;
+
+        const themeBox = document.createElement("div");
+        themeBox.id = "theme-box";
+        const themeLabel = document.createElement("span");
+        themeLabel.textContent = "Тема интерфейса:";
+        themeBox.appendChild(themeLabel);
+
+        function makeThemeChip(id, label) {
+          const chip = document.createElement("button");
+          chip.type = "button";
+          chip.className = "theme-chip";
+          chip.textContent = label;
+          if (currentTheme === id) chip.classList.add("active");
+          chip.addEventListener("click", () => {
+            applyTheme(id);
+            themeBox.querySelectorAll(".theme-chip").forEach(c => c.classList.remove("active"));
+            chip.classList.add("active");
+          });
+          return chip;
+        }
+
+        themeBox.appendChild(makeThemeChip("default", "Зелёнка"));
+        themeBox.appendChild(makeThemeChip("violet", "Фиолетовый"));
+        themeBox.appendChild(makeThemeChip("amber", "Янтарный"));
+
+        const startBtn = document.createElement("button");
+        startBtn.className = "choice-btn";
+        startBtn.style.setProperty("--card-rot", "0deg");
+        startBtn.textContent = "Начать Игру";
+        startBtn.addEventListener("click", () => {
+          playClick();
+          triggerRiftEffect();
+          setTimeout(() => {
+            showIntroScene();
+          }, 260);
+        });
+
+        choicesEl.appendChild(achBtn);
+        choicesEl.appendChild(themeBox);
+        choicesEl.appendChild(startBtn);
       }
 
-      themeBox.appendChild(makeThemeChip("default", "Зелёнка"));
-      themeBox.appendChild(makeThemeChip("violet", "Фиолетовый"));
-      themeBox.appendChild(makeThemeChip("amber", "Янтарный"));
-
-      choicesEl.appendChild(themeBox);
-
-      const startBtn = document.createElement("button");
-      startBtn.className = "choice-btn";
-      startBtn.style.setProperty("--card-rot", "0deg");
-      startBtn.textContent = "Начать симуляцию";
-      startBtn.addEventListener("click", () => {
-        playClick();
-        triggerRiftEffect();
-        setTimeout(() => {
-          showIntroScene();
-        }, 260);
-      });
-
-      const achBtn = document.createElement("button");
-      achBtn.className = "choice-btn";
-      achBtn.style.setProperty("--card-rot", "-1.2deg");
-      achBtn.textContent = "Просмотр достижений";
-      achBtn.addEventListener("click", () => {
-        playClick();
-        showAchievementsModal();
-      });
-      choicesEl.appendChild(startBtn);
-      choicesEl.appendChild(achBtn);
-
-updateMusicMood();
+      renderStep();
+      updateMusicMood();
     }
 
     function showIntroScene() {
