@@ -5,7 +5,7 @@
   <title>Игра в Имитацию: Кто же ты?</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <style>
-    /* БАЗА КОР */
+    
     * {
       box-sizing: border-box;
       margin: 0;
@@ -206,34 +206,107 @@
       100% { transform: translateX(-1px); filter: hue-rotate(-20deg); }
     }
 
-    #transition-rift {
+    #transition-rift{
       position: fixed;
       inset: 0;
       pointer-events: none;
+      z-index: 1000;
       opacity: 0;
       transform: scale(1);
-      z-index: 1000;
+      background: radial-gradient(circle at 50% 52%, rgba(0,255,156,0.12) 0, rgba(124,251,255,0.07) 22%, rgba(0,0,0,0) 52%);
+      filter: saturate(1.1);
+    }
+
+    #transition-rift::before{
+      content: "";
+      position: absolute;
+      inset: -22%;
       background:
-        radial-gradient(circle at 50% 50%, rgba(255,255,255,0.18) 0, rgba(255,255,255,0.08) 20%, transparent 45%),
-        repeating-linear-gradient(
-          135deg,
-          rgba(0,255,156,0.0),
-          rgba(0,255,156,0.0) 6px,
-          rgba(0,255,156,0.3) 8px,
-          rgba(255,0,193,0.3) 10px,
-          rgba(0,0,0,0.0) 12px
+        conic-gradient(from 180deg at 50% 50%,
+          rgba(124,251,255,0.0) 0deg,
+          rgba(124,251,255,0.28) 28deg,
+          rgba(0,255,156,0.0) 80deg,
+          rgba(255,0,193,0.18) 130deg,
+          rgba(0,0,0,0.0) 210deg,
+          rgba(0,255,156,0.22) 265deg,
+          rgba(124,251,255,0.0) 360deg
+        ),
+        radial-gradient(circle at 50% 50%,
+          rgba(0,255,156,0.10) 0,
+          rgba(0,0,0,0.0) 58%
         );
       mix-blend-mode: screen;
-      background-size: 160% 160%;
+      filter: blur(10px) contrast(calc(1.05 + 0.35 * var(--fx-contrast)));
+      transform: translate3d(0,0,0) scale(0.92) rotate(0deg);
+      opacity: 0;
     }
 
-    #transition-rift.show {
-      animation: rift-open 0.9s ease-in-out forwards;
+    #transition-rift::after{
+      content: "";
+      position: absolute;
+      inset: -10%;
+      background:
+        repeating-linear-gradient(
+          115deg,
+          rgba(0,0,0,0) 0px,
+          rgba(0,0,0,0) 18px,
+          rgba(124,251,255,0.10) 22px,
+          rgba(0,255,156,0.14) 26px,
+          rgba(0,0,0,0) 32px
+        ),
+        radial-gradient(circle at 50% 45%,
+          rgba(255,0,193,0.08) 0,
+          rgba(0,0,0,0) 55%
+        );
+      mix-blend-mode: screen;
+      filter: blur(2px) contrast(calc(1.0 + 0.25 * var(--fx-contrast)));
+      transform: translate3d(0,0,0) scale(1.06);
+      opacity: 0;
     }
 
-    @keyframes rift-open {
-      0%   { opacity: 0; transform: scale(0.9); }
-      25%  { opacity: 0.9; transform: scale(1.02) rotate(2deg); }
+    #transition-rift.show{
+      animation: rift-open 0.92s cubic-bezier(.18,.92,.2,1) forwards;
+    }
+
+    #transition-rift.show::before{
+      animation: rift-core 0.92s cubic-bezier(.18,.92,.2,1) forwards;
+    }
+
+    #transition-rift.show::after{
+      animation: rift-streaks 0.92s cubic-bezier(.18,.92,.2,1) forwards;
+    }
+
+    @keyframes rift-open{
+      0%{ opacity: 0; transform: scale(1.06) translateY(-1.2vh); }
+      18%{ opacity: 1; transform: scale(0.98) translateY(0); }
+      55%{ opacity: 0.75; transform: scale(1.02) translateY(0.8vh); }
+      100%{ opacity: 0; transform: scale(1.10) translateY(2.2vh); }
+    }
+
+    @keyframes rift-core{
+      0%{ opacity: 0; transform: scale(0.88) rotate(-8deg); }
+      20%{ opacity: calc(0.95 * var(--fx-intensity)); transform: scale(1.02) rotate(18deg); }
+      60%{ opacity: calc(0.65 * var(--fx-intensity)); transform: scale(0.96) rotate(44deg); }
+      100%{ opacity: 0; transform: scale(1.14) rotate(68deg); }
+    }
+
+    @keyframes rift-streaks{
+      0%{ opacity: 0; transform: scale(1.16) translateY(-2.0vh); }
+      18%{ opacity: calc(0.72 * var(--fx-intensity)); transform: scale(1.00) translateY(0); }
+      60%{ opacity: calc(0.45 * var(--fx-intensity)); transform: scale(1.08) translateY(1.2vh); }
+      100%{ opacity: 0; transform: scale(1.22) translateY(3.2vh); }
+    }
+
+    @media (max-width: 540px){
+      #transition-rift::before{ filter: blur(8px) contrast(calc(1.05 + 0.28 * var(--fx-contrast))); }
+      #transition-rift::after{ filter: blur(1.6px) contrast(calc(1.0 + 0.20 * var(--fx-contrast))); }
+    }
+
+    @media (prefers-reduced-motion: reduce){
+      #transition-rift.show, #transition-rift.show::before, #transition-rift.show::after{ animation-duration: 0.001s; }
+    }
+
+          25%  { opacity: 0.9; transform: scale(1.02) rotate(2deg); }
       60%  { opacity: 0.6; transform: scale(0.98) rotate(-2deg); }
       100% { opacity: 0; transform: scale(1) rotate(0deg); }
     }
@@ -253,10 +326,10 @@
       z-index: 5;
     }
 
-    /* === ВЕРСТКА ИНТЕРФЕЙСА (обновлено масштабирование) === */
+    
     #game-root {
       position: relative;
-      max-width: 1100px; /* было 960 — расширили примерно на 15% */
+      max-width: 1100px; 
       width: 100%;
       background: rgba(3, 8, 16, 0.94);
       border: 2px solid #00ff9c;
@@ -370,7 +443,7 @@
       box-shadow: 0 0 10px #7cfbff99;
     }
 
-    /* === ГРИД ИГРОВОГО ПОЛЯ === */
+    
     #screen {
       display: grid;
       grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
@@ -392,7 +465,7 @@
       }
     }
 
-    /* === КАРТИНКА: крупнее, с min-height 600 === */
+    
     #image-box {
       border: 1px solid #00ff9c55;
       background: radial-gradient(circle, #041018 0, #020509 70%);
@@ -402,7 +475,7 @@
       overflow: hidden;
       position: relative;
 
-      min-height: 600px; /* твой фикс, чтобы картинка была крупнее */
+      min-height: 600px; 
     }
 
     #image-box::after {
@@ -440,7 +513,7 @@
       padding: 8px;
     }
 
-    /* === ПРАВАЯ ЧАСТЬ: ТЕКСТ + ВАРИАНТЫ === */
+    
     #scene-box {
       display: flex;
       flex-direction: column;
@@ -470,7 +543,7 @@
       align-items: stretch;
     }
 
-    /* Карточки выбора */
+    
     .choice-btn {
       --card-rot: 0deg;
       background: linear-gradient(
@@ -938,7 +1011,7 @@
       text-align: center;
     }
 
-    /* Центровка формы игрока */
+    
     #player-form-wrapper {
       display: flex;
       flex-direction: column;
@@ -967,9 +1040,9 @@
 
     #pathgame-grid {
       display: grid;
-      grid-template-columns: repeat(10, 24px);
-      grid-template-rows: repeat(10, 24px);
-      gap: 3px;
+      grid-template-columns: repeat(10, var(--pg-cell));
+      grid-template-rows: repeat(10, var(--pg-cell));
+      gap: var(--pg-gap);
       padding: 6px;
       border-radius: 6px;
       border: 1px solid #00ff9c55;
@@ -1023,8 +1096,8 @@
 
     #pathgame-arrows {
       display: grid;
-      grid-template-columns: repeat(3, 32px);
-      grid-template-rows: repeat(2, 32px);
+      grid-template-columns: repeat(3, var(--pg-arrow));
+      grid-template-rows: repeat(2, var(--pg-arrow));
       gap: 4px;
       justify-items: center;
       align-items: center;
@@ -1120,7 +1193,7 @@
       transform: translateY(0);
     }
   
-    /* === ЭФФЕКТЫ ФИНАЛА (оверлей на картинке) === */
+    
     .effect-canvas {
       position: absolute;
       inset: 0;
@@ -1131,29 +1204,29 @@
     }
 
   
-    /* ===== Fullscreen ending FX + HUD overlay ===== */
+    
     #fx-canvas {
       position: fixed;
       inset: 0;
       width: 100vw;
       height: 100vh;
-      z-index: 1;           /* behind #game-root (z=2) */
+      z-index: 1;           
       pointer-events: none;
       opacity: 0;
       transition: opacity 0.35s ease;
     }
-    body.fx-on #fx-canvas { opacity: 1; }
+    body.fx-on #fx-canvas { opacity: calc(1 * var(--fx-intensity)); }
 
     #hud-overlay {
       position: fixed;
       inset: 0;
-      z-index: 1;           /* behind #game-root */
+      z-index: 1;           
       pointer-events: none;
       opacity: 0;
       transition: opacity 0.35s ease;
       overflow: hidden;
     }
-    body.hud-on #hud-overlay { opacity: 1; }
+    body.hud-on #hud-overlay { opacity: calc(1 * var(--fx-intensity)); }
 
     .hud-frag {
       position: absolute;
@@ -1192,7 +1265,7 @@
     }
 
 
-    /* === АУДИО-КОНТРОЛЬ === */
+    
     .volume-slider{
       width: 110px;
       height: 6px;
@@ -1204,21 +1277,176 @@
       .volume-slider{ width: 90px; }
     }
 
-    /* === РАДАР / ПОИСК ИГРОКА (ранние экраны) === */
+    
+    
+    .fx-panel{
+      position: absolute;
+      top: 42px;
+      right: 8px;
+      width: 240px;
+      padding: 10px 10px 8px;
+      background: rgba(0,0,0,0.88);
+      border: 1px solid rgba(0,255,156,0.30);
+      border-radius: 10px;
+      box-shadow: 0 0 20px rgba(0,255,156,0.10);
+      z-index: 50;
+      opacity: 0;
+      transform: translateY(-6px);
+      pointer-events: none;
+      transition: opacity .18s ease, transform .18s ease;
+    }
+    .fx-panel.show{
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+    .fx-row{
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin: 6px 0;
+      font-size: 12px;
+      color: rgba(124,251,255,0.85);
+    }
+    .fx-row input[type="range"]{
+      width: 140px;
+      height: 6px;
+      accent-color: rgba(0,255,156,0.75);
+      cursor: pointer;
+    }
+    .fx-hint{
+      margin-top: 6px;
+      font-size: 11px;
+      color: rgba(124,251,255,0.55);
+      line-height: 1.2;
+    }
+
+    
+    #ai-comment.inject{
+      border-color: rgba(255, 36, 90, 0.35);
+      color: rgba(255, 186, 186, 0.92);
+      box-shadow: 0 0 18px rgba(255, 36, 90, 0.10);
+    }
+    #ai-comment.jitter{
+      animation: toast-jitter 0.12s linear 2;
+    }
+    @keyframes toast-jitter{
+      0%{ transform: translateY(0) translateX(0); }
+      25%{ transform: translateY(-1px) translateX(1px); }
+      50%{ transform: translateY(0) translateX(-1px); }
+      75%{ transform: translateY(1px) translateX(1px); }
+      100%{ transform: translateY(0) translateX(0); }
+    }
+
+    
+    :root{
+      --fx-intensity: 1;
+      --fx-contrast: 1.1;
+    
+      --pg-cell: 24px;
+      --pg-gap: 3px;
+      --pg-arrow: 32px;
+    }
+
     #scan-canvas{
       position: fixed;
       inset: 0;
       width: 100vw;
       height: 100vh;
-      z-index: 1;           /* behind #game-root */
+      z-index: 1;           
       pointer-events: none;
       opacity: 0;
       transition: opacity 0.45s ease;
       mix-blend-mode: screen;
     }
-    body.scan-on #scan-canvas{ opacity: 0.9; }
+    body.scan-on #scan-canvas{ opacity: calc(0.9 * var(--fx-intensity)); }
 
-    /* HUD режимы */
+
+    
+    #obs-layer{
+      position: fixed;
+      inset: 0;
+      z-index: 900;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.35s ease;
+      mix-blend-mode: screen;
+    }
+    body.observe-on #obs-layer{ opacity: calc(0.55 * var(--fx-intensity)); }
+    body.observe-strong #obs-layer{ opacity: calc(0.82 * var(--fx-intensity)); }
+    body.observe-passive #obs-layer{ opacity: calc(0.40 * var(--fx-intensity)); }
+
+    #obs-box{
+      position: absolute;
+      width: 92px;
+      height: 72px;
+      transform: translate(-200px,-200px);
+      opacity: 0.9;
+      filter: drop-shadow(0 0 10px rgba(0,255,156,0.18));
+      will-change: transform, opacity;
+    }
+    #obs-box:before, #obs-box:after{
+      content:"";
+      position:absolute;
+      inset:0;
+      border: 1px solid rgba(0,255,156,0.35);
+      border-radius: 10px;
+    }
+    
+    #obs-box i{
+      position:absolute;
+      width: 18px;
+      height: 18px;
+      border-color: rgba(0,255,156,0.72);
+      border-style: solid;
+      border-width: 0;
+      opacity: 0.75;
+    }
+    #obs-box i.tl{ left:-2px; top:-2px; border-left-width:2px; border-top-width:2px; border-top-left-radius:10px; }
+    #obs-box i.tr{ right:-2px; top:-2px; border-right-width:2px; border-top-width:2px; border-top-right-radius:10px; }
+    #obs-box i.bl{ left:-2px; bottom:-2px; border-left-width:2px; border-bottom-width:2px; border-bottom-left-radius:10px; }
+    #obs-box i.br{ right:-2px; bottom:-2px; border-right-width:2px; border-bottom-width:2px; border-bottom-right-radius:10px; }
+
+    #obs-label{
+      position:absolute;
+      left: 14px;
+      top: 14px;
+      padding: 6px 8px;
+      border-radius: 8px;
+      border: 1px solid rgba(0,255,156,0.22);
+      background: rgba(0, 7, 12, 0.22);
+      color: rgba(0,255,156,0.70);
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size: 11px;
+      line-height: 1.25;
+      max-width: min(58vw, 560px);
+      white-space: pre-line;
+      text-shadow: 0 0 10px rgba(0,255,156,0.10);
+      transform: translateZ(0);
+      will-change: contents, transform, opacity;
+      opacity: 0.7;
+    }
+
+    
+    body.fx-human #obs-label{ color: rgba(255, 220, 200, 0.72); border-color: rgba(255, 220, 200, 0.22); background: rgba(20, 10, 8, 0.18); }
+    body.fx-human #obs-box i{ border-color: rgba(255, 220, 200, 0.78); }
+    body.fx-matrix #obs-label{ color: rgba(0, 255, 140, 0.75); }
+    body.fx-matrix #obs-box i{ border-color: rgba(0, 255, 140, 0.82); }
+
+    
+    body.observe-strong #obs-label{
+      animation: obs-label-jitter 4.2s infinite;
+    }
+    @keyframes obs-label-jitter{
+      0%{ transform: translate(0,0); }
+      3%{ transform: translate(1px,0); }
+      5%{ transform: translate(-1px,0); }
+      8%{ transform: translate(0,0); }
+      100%{ transform: translate(0,0); }
+    }
+
+    
     body.hud-calm .hud-frag{
       animation-name: hud-calm;
       text-shadow: 0 0 10px rgba(0, 255, 156, 0.14);
@@ -1256,6 +1484,59 @@
       100% { opacity: 0; transform: translateY(0px) skewX(0deg); }
     }
 
+
+
+
+#minigame-dialog { overflow-y: auto; }
+#minigame-text { flex: 0 0 auto; }
+#minigame-dialog.minigame-path #minigame-text{
+  max-height: 22vh;
+  overflow-y: auto;
+  padding-right: 6px;
+  border-bottom: 1px dashed #00ff9c33;
+}
+#minigame-dialog.minigame-path #pathgame-container{ flex: 0 0 auto; }
+
+#scene-text, #minigame-text, #result-body, #epilogue-body{
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  hyphens: auto;
+}
+
+@media (max-width: 860px){
+  body{ padding: 10px; font-size: 14px; }
+  #game-root{ padding: 12px; }
+  #header{ flex-wrap: wrap; gap: 8px; }
+  #header-right{ flex-wrap: wrap; gap: 8px; justify-content: flex-end; }
+  #screen{ grid-template-columns: 1fr; gap: 12px; }
+  #image-box{
+    min-height: 34vh;
+    max-height: 44vh;
+  }
+  
+  #image-box img{
+    object-fit: contain;
+    transform: none;
+    background: rgba(0,0,0,0.9);
+  }
+  #scene-title{ font-size: 14px; }
+  #scene-text{ font-size: 14px; line-height: 1.6; }
+  .choice-btn{ font-size: 14px; }
+}
+
+@media (max-width: 480px){
+  :root{
+    --pg-cell: 20px;
+    --pg-gap: 2px;
+    --pg-arrow: 30px;
+  }
+  #image-box{
+    min-height: 30vh;
+    max-height: 40vh;
+  }
+  #minigame-dialog{ width: 94vw; }
+}
+
 </style>
 </head>
 <body class="theme-default">
@@ -1269,7 +1550,7 @@
 
   <div id="transition-rift"></div>
 
-  <!-- Fullscreen FX layers (epilogue/final) -->
+  
   <canvas id="fx-canvas" aria-hidden="true"></canvas>
   <canvas id="scan-canvas" aria-hidden="true"></canvas>
   <div id="hud-overlay" aria-hidden="true"></div>
@@ -1281,7 +1562,20 @@
       <div id="header-right">
         <button id="music-toggle" class="icon-btn" aria-label="Звук: вкл/выкл">🔊</button>
         <input id="volume-slider" class="volume-slider" type="range" min="0" max="100" value="60" aria-label="Громкость">
-        <div id="achievements-strip"></div>
+        
+        <button id="fx-toggle" class="icon-btn" aria-label="Настройки эффектов">⚙</button>
+        <div id="fx-panel" class="fx-panel" aria-hidden="true">
+          <div class="fx-row">
+            <span>Эффекты</span>
+            <input id="fx-slider" type="range" min="0" max="100" value="100">
+          </div>
+          <div class="fx-row">
+            <span>Контраст</span>
+            <input id="contrast-slider" type="range" min="80" max="140" value="110">
+          </div>
+          <div class="fx-hint">M — mute • +/- — громкость • Enter — продолжить</div>
+        </div>
+<div id="achievements-strip"></div>
         <div id="role-display"></div>
       </div>
     </div>
@@ -1376,7 +1670,7 @@
     </div>
   </div>
 
-  <!-- ОДНА фоновая музыка -->
+  
   <audio id="bg-main" src="audio/ambient_main.mp3" loop></audio>
   <audio id="click-sound" src="audio/click.wav"></audio>
 
@@ -1532,10 +1826,6 @@
           "Дроны могут патрулировать районы и предупреждать о нарушениях раньше, чем люди успеют вмешаться.",
           "",
           "Дроны ведут постоянную съемку всего, что происходит на улицах, во дворах, в подъездах.",
-          "ИИ решает, кому давать льготы, жильё и медпомощь.",
-          "",
-          "ИИ-оператор:",
-          "«ВМЕШАЛСЯ БЫ ТЫ В РЕШЕНИЕ СИСТЕМЫ В ЭТОЙ СИТУАЦИИ?»"
         ].join("\n"),
         image: "images/social_credit.png",
         choices: [
@@ -1559,7 +1849,6 @@
           "Дорога, которая раньше занимала 3 часа, теперь занимает 20 минут.",
           "",
           "Но новые пути проходят по территории зелёных зон и часть деревьев вырубается.",
-          "ИИ обещает идеально адаптированные программы и высокие результаты.",
           "",
           "ИИ-оператор:",
           "«КАКОЙ ВАРИАНТ МАРШРУТА ТЫ СЧИТАЕШЬ ПРАВИЛЬНЫМ?»"
@@ -1834,7 +2123,7 @@
     const musicToggle = document.getElementById("music-toggle");
     const volumeSlider = document.getElementById("volume-slider");
     let musicEnabled = true;
-    let masterVolume = 0.60; // 0..1
+    let masterVolume = 0.60; 
     let isMuted = false;
     let lastVolumeValue = masterVolume;
     let lastVolumeRemarkAt = 0;
@@ -1881,21 +2170,21 @@
     function applyMasterVolume() {
       const muteFactor = isMuted ? 0 : 1;
 
-      // Click
+      
       try { if (clickSound) clickSound.volume = 0.25 * masterVolume * muteFactor; } catch (_) {}
 
-      // Background music (base volume is set by updateMusicMood)
+      
       try {
         if (bgMain) bgMain.volume = Math.max(0, Math.min(1, bgMain.volume)) * muteFactor;
       } catch (_) {}
 
-      // Server hum base
+      
       try { ensureFxLayers(); if (serverHumEl) serverHumEl.volume = 0.05 * masterVolume * muteFactor; } catch (_) {}
     }
 
     function onVolumeChange(v01) {
       masterVolume = Math.max(0, Math.min(1, v01));
-      // Re-apply mood volume, then apply master scaling
+      
       updateMusicMood();
       applyMasterVolume();
 
@@ -1951,6 +2240,7 @@
     let selectedChoiceIsSecret = false;
 
     let minigameMode = "reaction";
+      minigameDialog.classList.remove("minigame-path");
     let minigamePhase = "idle";
     let minigameTimeoutId = null;
     let minigameStartTime = 0;
@@ -2038,7 +2328,7 @@
         span.dataset.achId = id;
         span.textContent = ACHIEVEMENT_SYMBOLS[id] || "•";
         const def = ACHIEVEMENT_DEFS[id];
-        // Hover tooltips disabled (no spoiler text on mouseover).
+        
         achievementsStripEl.appendChild(span);
       });
       refreshAchievementsStrip();
@@ -2114,15 +2404,15 @@
     }
 
     function showSceneImage(scene) {
-      // Любая смена картинки сбрасывает эффекты финала
+      
       stopEndingEffect();
       showImageByPath(scene.image, scene.title);
     }
 
 
-    // === ЭФФЕКТЫ ФИНАЛА: "матрица" для поражения и "человечность" для победы ===
+    
     const endingEffect = {
-      type: null, // "matrix" | "human"
+      type: null, 
       canvas: null,
       ctx: null,
       raf: 0,
@@ -2136,7 +2426,7 @@
     };
 
     
-    /* ===== FX/HUD helpers ===== */
+    
     let fxCanvasEl = null;
     let hudOverlayEl = null;
     let hudOverlayReady = false;
@@ -2147,7 +2437,7 @@
       hudOverlayEl = hudOverlayEl || document.getElementById("hud-overlay");
       serverHumEl = serverHumEl || document.getElementById("server-hum");
 
-      // Safety: if elements are missing (older HTML), create them.
+      
       if (!fxCanvasEl) {
         fxCanvasEl = document.createElement("canvas");
         fxCanvasEl.id = "fx-canvas";
@@ -2169,7 +2459,7 @@
         document.body.appendChild(serverHumEl);
       }
 
-      // Always keep this extremely quiet.
+      
       try { serverHumEl.volume = 0.05; } catch (_) {}
     }
 
@@ -2307,7 +2597,7 @@
       ctx.beginPath();
       ctx.moveTo(x, y);
       ctx.lineTo(x2, y2);
-      // arrow head
+      
       const ah = Math.max(8, len * 0.22);
       ctx.moveTo(x2, y2);
       ctx.lineTo(x2 - dx * ah + (-dy) * (ah * 0.55), y2 - dy * ah + (dx) * (ah * 0.55));
@@ -2324,7 +2614,7 @@
 
       if (scanFx.raf) return;
 
-      // seed
+      
       scanFx.sweeps = [];
       scanFx.blips = [];
       spawnRadarSweep();
@@ -2339,17 +2629,17 @@
         const ctx = scanCanvasEl.getContext("2d");
         ctx.clearRect(0, 0, scanFx.w, scanFx.h);
 
-        // subtle vignette
+        
         ctx.save();
         ctx.scale(1, 1);
         ctx.strokeStyle = "rgba(0,255,156,0.22)";
         ctx.lineWidth = 1.2 * dpr;
 
-        // random spawns
+        
         if (Math.random() < 0.012) spawnRadarSweep();
         if (Math.random() < 0.035) spawnRadarBlip();
 
-        // sweeps
+        
         scanFx.sweeps = scanFx.sweeps.filter(s => s.life < 1.0);
         for (const s of scanFx.sweeps) {
           s.life += 0.0055;
@@ -2364,13 +2654,13 @@
           ctx.arc(s.cx, s.cy, s.r0, a1, a2);
           ctx.stroke();
 
-          // arrows on sweep edge
+          
           const ax = s.cx + Math.cos(s.a) * s.r0;
           const ay = s.cy + Math.sin(s.a) * s.r0;
           drawArrow(ctx, ax, ay, s.a, 46 * dpr, 0.14 + 0.22 * (1 - s.life));
         }
 
-        // blips (short-lived arrows)
+        
         scanFx.blips = scanFx.blips.filter(b => b.life < 1.0);
         for (const b of scanFx.blips) {
           b.life += 0.02;
@@ -2393,8 +2683,146 @@
       if (scanFx._onResize) {
         try { window.removeEventListener("resize", scanFx._onResize); } catch (_) {}
       }
+
+
       scanFx._onResize = null;
       try { if (scanCanvasEl) scanCanvasEl.getContext("2d").clearRect(0,0,scanCanvasEl.width,scanCanvasEl.height); } catch (_) {}
+    }
+
+    
+    const obs = {
+      started: false,
+      raf: 0,
+      x: -200, y: -200,
+      tx: -200, ty: -200,
+      lastMove: 0,
+      nextStatusAt: 0,
+      mode: "passive",
+      sessionId: "",
+      layer: null,
+      box: null,
+      label: null
+    };
+
+    function makeSessionId() {
+      const a = Math.floor(1000 + Math.random() * 9000);
+      const b = Math.floor(10 + Math.random() * 90);
+      const c = Math.floor(100 + Math.random() * 900);
+      return `SESSION: KZ-${a}-${b}-${c}`;
+    }
+
+    function ensureObservationHud() {
+      obs.layer = obs.layer || document.getElementById("obs-layer");
+      if (!obs.layer) {
+        obs.layer = document.createElement("div");
+        obs.layer.id = "obs-layer";
+        obs.layer.setAttribute("aria-hidden", "true");
+
+        const box = document.createElement("div");
+        box.id = "obs-box";
+        box.innerHTML = '<i class="tl"></i><i class="tr"></i><i class="bl"></i><i class="br"></i>';
+
+        const label = document.createElement("div");
+        label.id = "obs-label";
+        label.textContent = "";
+
+        obs.layer.appendChild(label);
+        obs.layer.appendChild(box);
+        document.body.appendChild(obs.layer);
+
+        obs.box = box;
+        obs.label = label;
+      } else {
+        obs.box = obs.box || document.getElementById("obs-box");
+        obs.label = obs.label || document.getElementById("obs-label");
+      }
+    }
+
+    function setObservationMode(mode) {
+      obs.mode = mode || "passive";
+      document.body.classList.add("observe-on");
+      document.body.classList.toggle("observe-strong", obs.mode === "active");
+      document.body.classList.toggle("observe-passive", obs.mode === "passive");
+    }
+
+    function setObservationStatus(lines) {
+      ensureObservationHud();
+      if (!obs.sessionId) obs.sessionId = makeSessionId();
+      const head = obs.sessionId;
+      const tail = Array.isArray(lines) ? lines.join("\n") : String(lines || "");
+      obs.label.textContent = head + "\n" + tail;
+    }
+
+    function startObservation() {
+      ensureFxLayers();
+      ensureObservationHud();
+      if (obs.started) return;
+      obs.started = true;
+      if (!obs.sessionId) obs.sessionId = makeSessionId();
+
+      
+      document.body.classList.add("observe-on");
+      if (!obs.lastMove) obs.lastMove = performance.now();
+
+      const onMove = (x, y) => {
+        obs.tx = x;
+        obs.ty = y;
+        obs.lastMove = performance.now();
+      };
+
+      window.addEventListener("mousemove", (e) => onMove(e.clientX, e.clientY), { passive: true });
+      window.addEventListener("touchmove", (e) => {
+        const t = e.touches && e.touches[0];
+        if (t) onMove(t.clientX, t.clientY);
+      }, { passive: true });
+
+      const statuses = [
+        () => ["TRACK: USER POINTER", "SPECTRUM SCAN: ON"],
+        () => ["BIOMETRIC LOCK: PASSIVE", "SIGNAL: ACQUIRED"],
+        () => ["POLICY WATCH: ENABLED", "LATENCY: STABLE"],
+        () => ["PACKET TRACE: ACTIVE", "NOISE FLOOR: NORMAL"],
+        () => ["ACCESS: LIMITED", "AUDIT: RUNNING"],
+        () => ["ANOMALY CHECK: PASS", "CACHE: WARM"],
+      ];
+
+      const loop = () => {
+        obs.raf = requestAnimationFrame(loop);
+
+        
+        const ease = obs.mode === "active" ? 0.16 : 0.10;
+        obs.x += (obs.tx - obs.x) * ease;
+        obs.y += (obs.ty - obs.y) * ease;
+
+        
+        if (obs.box) {
+          obs.box.style.transform = `translate(${Math.round(obs.x - 46)}px, ${Math.round(obs.y - 36)}px)`;
+          
+          const idle = performance.now() - obs.lastMove;
+          const op = idle > 2500 ? 0.28 : 0.90;
+          obs.box.style.opacity = String(op);
+        }
+
+        
+        const now = performance.now();
+        if (now > obs.nextStatusAt) {
+          obs.nextStatusAt = now + (1600 + Math.random() * 3800);
+          const idle = now - obs.lastMove;
+          if (idle > 2600) {
+            setObservationStatus(["TRACK: LOST", "SIGNAL DEGRADES…"]);
+          } else {
+            const pick = statuses[Math.floor(Math.random() * statuses.length)];
+            setObservationStatus(pick());
+          }
+        }
+      };
+
+      if (!obs.raf) loop();
+    }
+
+    function stopObservation() {
+      try { if (obs.raf) cancelAnimationFrame(obs.raf); } catch(_) {}
+      obs.raf = 0;
+      document.body.classList.remove("observe-on", "observe-strong", "observe-passive");
     }
 
 function startServerHum() {
@@ -2417,7 +2845,7 @@ function startServerHum() {
       document.body.classList.add("hud-on");
       document.body.classList.toggle("hud-calm", mode === "calm" || mode === "human");
       document.body.classList.toggle("hud-glitch", mode === "glitch");
-      // Rebuild overlay if mode changes.
+      
       if (!hudOverlayReady || hudOverlayMode !== mode) {
         hudOverlayMode = mode;
         populateHudOverlay(mode);
@@ -2426,7 +2854,7 @@ function startServerHum() {
     }
 
     function fadeOutAmbientOverlay() {
-      // Soft fade, then fully stop.
+      
       document.body.classList.add("hud-fade");
       setTimeout(() => {
         stopAmbientOverlay();
@@ -2478,7 +2906,7 @@ function startServerHum() {
 
     
     function startEndingEffect(alignment) {
-      // alignment: "human" | "tech"
+      
       stopEndingEffect();
       stopScanEffect();
       startAmbientOverlay((alignment === "human") ? "human" : "glitch");
@@ -2629,7 +3057,7 @@ function startServerHum() {
       const step = () => {
         if (endingEffect.type !== "matrix") return;
 
-        // лёгкий "шлейф"
+        
         ctx.fillStyle = "rgba(0,0,0,0.10)";
         ctx.fillRect(0, 0, endingEffect.w, endingEffect.h);
 
@@ -2642,7 +3070,7 @@ function startServerHum() {
           const ch = chars.charAt((Math.random() * chars.length) | 0);
           ctx.fillText(ch, x, y);
 
-          // иногда сбрасываем "каплю"
+          
           if (y > endingEffect.h && Math.random() > 0.975) drops[i] = 0;
           drops[i]++;
         }
@@ -2659,7 +3087,7 @@ function startServerHum() {
       if (!ctx) return;
 
       function spawnParticle() {
-        // частицы поднимаются вверх, создавая "тёплую" атмосферу
+        
         const p = {
           x: Math.random() * endingEffect.w,
           y: endingEffect.h + 10 + Math.random() * 40,
@@ -2676,11 +3104,11 @@ function startServerHum() {
       const step = (t) => {
         if (endingEffect.type !== "human") return;
 
-        // мягкое затемнение (для свечения)
+        
         ctx.fillStyle = "rgba(0,0,0,0.06)";
         ctx.fillRect(0, 0, endingEffect.w, endingEffect.h);
 
-        // "дыхание" света
+        
         const pulse = 0.55 + 0.45 * Math.sin((t - endingEffect.t0) / 900);
         const gx = endingEffect.w * 0.5;
         const gy = endingEffect.h * 0.55;
@@ -2691,7 +3119,7 @@ function startServerHum() {
         ctx.fillStyle = g;
         ctx.fillRect(0, 0, endingEffect.w, endingEffect.h);
 
-        // поддерживаем число частиц
+        
         if (endingEffect.particles.length < 90) {
           for (let i = 0; i < 3; i++) spawnParticle();
         } else if (Math.random() < 0.35) {
@@ -2711,7 +3139,7 @@ function startServerHum() {
           const k = Math.min(1, p.life / 300) * Math.min(1, (p.ttl - p.life) / 500);
           const alpha = Math.max(0, p.a * k);
 
-          // тёплый спектр: от янтарного к розовому
+          
           const r = 255;
           const gch = 190 + ((Math.random() * 40) | 0);
           const b = 170 + ((Math.random() * 50) | 0);
@@ -2790,13 +3218,13 @@ function startServerHum() {
         return;
       }
 
-      // База: тихая атмосфера, +5–10% громче при уклоне в ИИ
+      
       let baseVol = 0.25;
       if (totalWeighted > 0.0001) {
         if (techRatio > humanRatio) {
-          baseVol = 0.30 + 0.08 * dominance; // ~0.30–0.38 при сильном уклоне в ИИ
+          baseVol = 0.30 + 0.08 * dominance; 
         } else {
-          baseVol = 0.22 + 0.06 * dominance; // 0.22–0.28 при уклоне к людям/балансе
+          baseVol = 0.22 + 0.06 * dominance; 
         }
       }
       bgMain.volume = Math.max(0, Math.min(0.4, baseVol)) * masterVolume * (isMuted ? 0 : 1);
@@ -2809,7 +3237,7 @@ function startServerHum() {
     }
 
     function toggleMusic() {
-      // Mute/unmute all audio without revealing any diagnostics.
+      
       isMuted = !isMuted;
       if (isMuted) {
         musicToggle.classList.remove("on");
@@ -2831,15 +3259,215 @@ function startServerHum() {
     if (volumeSlider) {
       volumeSlider.addEventListener("input", (e) => {
         const v = Number(e.target.value || 0) / 100;
-        // If user drags to 0, treat as mute but keep icon consistent.
+        
         if (v <= 0.001) { isMuted = true; musicToggle.classList.remove("on"); }
         else { isMuted = false; musicToggle.classList.add("on"); }
         onVolumeChange(v);
       });
-      // init
+      
       onVolumeChange(masterVolume);
     }
 
+    
+    const fxToggle = document.getElementById("fx-toggle");
+    const fxPanel = document.getElementById("fx-panel");
+    const fxSlider = document.getElementById("fx-slider");
+    const contrastSlider = document.getElementById("contrast-slider");
+
+    let fxIntensity = 1.0;   
+    let fxContrast = 1.1;    
+
+    function applyVisualTuning() {
+      document.documentElement.style.setProperty("--fx-intensity", String(fxIntensity));
+      document.documentElement.style.setProperty("--fx-contrast", String(fxContrast));
+      
+      const root = document.getElementById("game-root");
+      if (root) root.style.filter = `contrast(${fxContrast})`;
+    }
+
+    
+    try {
+      const savedFxRaw = localStorage.getItem("imi_fx_intensity");
+      const savedCtRaw = localStorage.getItem("imi_fx_contrast");
+      const savedFx = savedFxRaw === null ? NaN : Number(savedFxRaw);
+      const savedCt = savedCtRaw === null ? NaN : Number(savedCtRaw);
+      if (!Number.isNaN(savedFx)) fxIntensity = Math.max(0, Math.min(1, savedFx));
+      if (!Number.isNaN(savedCt)) fxContrast = Math.max(0.8, Math.min(1.4, savedCt));
+      
+      if (savedFxRaw === null) localStorage.setItem("imi_fx_intensity", String(fxIntensity));
+      if (savedCtRaw === null) localStorage.setItem("imi_fx_contrast", String(fxContrast));
+    } catch (_) {}
+
+    if (fxSlider) fxSlider.value = Math.round(fxIntensity * 100);
+    if (contrastSlider) contrastSlider.value = Math.round(fxContrast * 100);
+    applyVisualTuning();
+
+    function toggleFxPanel(force) {
+      const want = typeof force === "boolean" ? force : !fxPanel.classList.contains("show");
+      fxPanel.classList.toggle("show", want);
+      fxPanel.setAttribute("aria-hidden", want ? "false" : "true");
+    }
+
+    if (fxToggle) {
+      fxToggle.addEventListener("click", (e) => {
+        e.preventDefault();
+        toggleFxPanel();
+      });
+    }
+    document.addEventListener("click", (e) => {
+      if (!fxPanel || !fxPanel.classList.contains("show")) return;
+      if (fxPanel.contains(e.target) || e.target === fxToggle) return;
+      toggleFxPanel(false);
+    });
+
+    if (fxSlider) {
+      fxSlider.addEventListener("input", (e) => {
+        fxIntensity = Math.max(0, Math.min(1, Number(e.target.value || 0) / 100));
+        try { localStorage.setItem("imi_fx_intensity", String(fxIntensity)); } catch (_) {}
+        applyVisualTuning();
+      });
+    }
+    if (contrastSlider) {
+      contrastSlider.addEventListener("input", (e) => {
+        fxContrast = Math.max(0.8, Math.min(1.4, Number(e.target.value || 100) / 100));
+        try { localStorage.setItem("imi_fx_contrast", String(fxContrast)); } catch (_) {}
+        applyVisualTuning();
+      });
+    }
+
+    
+    document.addEventListener("keydown", (e) => {
+      const tag = (document.activeElement && document.activeElement.tagName) ? document.activeElement.tagName.toUpperCase() : "";
+      if (tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT") return;
+
+      
+      if (e.key === "m" || e.key === "M" || e.code === "KeyM") {
+        e.preventDefault();
+        toggleMusic();
+        return;
+      }
+
+      
+      if (e.key === "+" || e.key === "=") {
+        e.preventDefault();
+        if (!volumeSlider) return;
+        volumeSlider.value = String(Math.min(100, Number(volumeSlider.value || 0) + 5));
+        volumeSlider.dispatchEvent(new Event("input", { bubbles: true }));
+        return;
+      }
+      if (e.key === "-" || e.key === "_") {
+        e.preventDefault();
+        if (!volumeSlider) return;
+        volumeSlider.value = String(Math.max(0, Number(volumeSlider.value || 0) - 5));
+        volumeSlider.dispatchEvent(new Event("input", { bubbles: true }));
+        return;
+      }
+
+      
+      if (e.key === "Enter") {
+        const btns = choicesEl ? Array.from(choicesEl.querySelectorAll("button.choice-btn, button.secret-choice")) : [];
+        if (btns.length === 1 && !btns[0].disabled) {
+          e.preventDefault();
+          btns[0].click();
+          return;
+        }
+        
+        if (confirmChoiceBtn && !confirmChoiceBtn.disabled) {
+          e.preventDefault();
+          confirmChoiceBtn.click();
+          return;
+        }
+      }
+    });
+
+    
+    const GLITCH_CHARS = "▓▒░#@$%&*+-=<>/\\|";
+    function glitchString(s, level = 0.06) {
+      if (!s) return s;
+      const a = s.split("");
+      const n = Math.max(1, Math.floor(a.length * level));
+      for (let i = 0; i < n; i++) {
+        const k = Math.floor(Math.random() * a.length);
+        if (a[k] === "\n" || a[k] === " ") continue;
+        a[k] = GLITCH_CHARS[Math.floor(Math.random() * GLITCH_CHARS.length)];
+      }
+      return a.join("");
+    }
+
+    function glitchBurst(el, level = 0.06) {
+      if (!el) return;
+      const orig = el.textContent;
+      if (!orig) return;
+      el.textContent = glitchString(orig, level);
+      setTimeout(() => { el.textContent = orig; }, 55);
+      setTimeout(() => { el.textContent = glitchString(orig, level); }, 95);
+      setTimeout(() => { el.textContent = orig; }, 140);
+    }
+
+    function maybeGlitchElement(el, chance = 0.16, level = 0.055) {
+      if (!el) return;
+      if (Math.random() > chance) return;
+      setTimeout(() => glitchBurst(el, level), 220 + Math.random() * 700);
+    }
+
+    
+    let toastHideTimeout = null;
+    function showToast(msg, mode = "ai", ms = 1700, jitter = false, doGlitch = false) {
+      if (!aiCommentEl) return;
+      if (toastHideTimeout) clearTimeout(toastHideTimeout);
+
+      aiCommentEl.classList.remove("inject", "jitter");
+      if (mode === "inject") aiCommentEl.classList.add("inject");
+      if (jitter) aiCommentEl.classList.add("jitter");
+
+      aiCommentEl.textContent = msg;
+      setTimeout(() => aiCommentEl.classList.add("ai-comment-show"), 40);
+
+      if (doGlitch) setTimeout(() => glitchBurst(aiCommentEl, 0.10), 60);
+
+      toastHideTimeout = setTimeout(() => {
+        aiCommentEl.classList.remove("ai-comment-show", "inject", "jitter");
+      }, ms);
+    }
+
+    
+    const LIVE_INJECTIONS = [
+      "Время пошло.",
+      "Сигнал теряется…",
+      "Пакет данных повреждён.",
+      "Канал дрожит. Не двигайтесь.",
+      "Проверка присутствия…",
+      "Сессия нестабильна.",
+      "Синхронизация задержана.",
+      "Внешний шум: повышен.",
+      "Запрос подтверждения…",
+      "Сбой телеметрии. Продолжайте."
+    ];
+
+    let liveInjectionTimeout = null;
+    function stopLiveInjections() {
+      if (liveInjectionTimeout) clearTimeout(liveInjectionTimeout);
+      liveInjectionTimeout = null;
+    }
+    function scheduleLiveInjections() {
+      stopLiveInjections();
+      if (gameState !== "scene") return;
+
+      const delay = 3800 + Math.random() * 5600; 
+      liveInjectionTimeout = setTimeout(() => {
+        if (gameState === "scene") {
+          
+          if (Math.random() < 0.35) {
+            const msg = LIVE_INJECTIONS[Math.floor(Math.random() * LIVE_INJECTIONS.length)];
+            showToast(msg, "inject", 1500, true, true);
+          }
+          
+          maybeGlitchElement(sceneTitleEl, 0.12, 0.06);
+          maybeGlitchElement(sceneTextEl, 0.10, 0.05);
+        }
+        scheduleLiveInjections();
+      }, delay);
+    }
 
     function clearAIComment() {
       aiCommentEl.textContent = "";
@@ -2898,12 +3526,13 @@ function startServerHum() {
     function triggerRiftEffect() {
       if (!transitionRiftEl) return;
       transitionRiftEl.classList.add("show");
-      setTimeout(() => {
-        transitionRiftEl.classList.remove("show");
-      }, 900);
+      setTimeout(() => { transitionRiftEl.classList.remove("show"); }, 920);
     }
 
     function showMainMenu() {
+      startObservation();
+      setObservationMode("active");
+      stopLiveInjections();
       stopEndingEffect();
       stopAmbientOverlay();
       stopScanEffect();
@@ -2998,7 +3627,12 @@ updateMusicMood();
       sceneTitleEl.textContent = scene.title;
       typeText(sceneTextEl, scene.text);
 
-      choicesEl.innerHTML = "";
+      
+      
+      scheduleLiveInjections();
+      maybeGlitchElement(sceneTitleEl, 0.10, 0.055);
+      maybeGlitchElement(sceneTextEl, 0.08, 0.05);
+choicesEl.innerHTML = "";
       const btn = document.createElement("button");
       btn.className = "choice-btn";
       btn.style.setProperty("--card-rot", "0deg");
@@ -3011,8 +3645,11 @@ updateMusicMood();
     }
 
     function showPlayerForm() {
+      startObservation();
+      setObservationMode("passive");
+      stopLiveInjections();
       gameState = "form";
-      // Calm HUD from menu should dissolve here.
+      
       fadeOutAmbientOverlay();
       stopScanEffect();
       enableConfidencePanel(false);
@@ -3353,7 +3990,8 @@ updateMusicMood();
       updateAlignmentBar();
 
       setTimeout(() => {
-        minigameModal.classList.remove("show");
+        minigameDialog.classList.remove("minigame-path");
+            minigameModal.classList.remove("show");
         if (testMode) {
           showTestMenu();
         } else if (currentSceneIndex < scenes.length) {
@@ -3369,6 +4007,7 @@ updateMusicMood();
     function setupPathMinigame() {
       gameState = "minigame";
       minigameMode = "path";
+      minigameDialog.classList.add("minigame-path");
       if (minigameTimeoutId) {
         clearTimeout(minigameTimeoutId);
         minigameTimeoutId = null;
@@ -3462,7 +4101,7 @@ updateMusicMood();
       container.appendChild(movesEl);
 
       minigameDialog.appendChild(container);
-      // Tooltip element removed (no hover spoilers).
+      
       pathGameState = {
         container,
         grid,
@@ -3504,7 +4143,7 @@ updateMusicMood();
     }
 
     function showPathTooltip(ev, x, y) {
-      // Tooltips are disabled by design (no hover spoilers).
+      
       return;
     }
 
@@ -3652,7 +4291,8 @@ minigameTextEl.textContent = text + "\n\nПереход к " +
       pathGameState = null;
 
       setTimeout(() => {
-        minigameModal.classList.remove("show");
+        minigameDialog.classList.remove("minigame-path");
+            minigameModal.classList.remove("show");
         if (testMode) {
           showTestMenu();
         } else if (currentSceneIndex < scenes.length) {
@@ -3796,6 +4436,9 @@ if (prevSceneIndex === FIRST_SCENE_INDEX) {
 
     
     function showMandatoryEpilogue() {
+      startObservation();
+      setObservationMode("active");
+      stopLiveInjections();
       gameState = "epilogue";
       enableConfidencePanel(false);
       resetChoiceSelection();
@@ -3806,7 +4449,7 @@ if (prevSceneIndex === FIRST_SCENE_INDEX) {
 
       progressEl.textContent = "ЭПИЛОГ";
       sceneTitleEl.textContent = "ЭПИЛОГ";
-      // Epilogue image
+      
       showSceneImage({ image: "images/ending_mixed.png", title: "ЭПИЛОГ" });
 
       const epilogueText =
@@ -3829,12 +4472,65 @@ if (prevSceneIndex === FIRST_SCENE_INDEX) {
       btn.textContent = "Узнать Анализ";
       btn.addEventListener("click", () => {
         playClick();
-        showEnding();
+        showLastRequest();
       });
       choicesEl.appendChild(btn);
     }
 
+
+function showLastRequest() {
+      startObservation();
+      setObservationMode("active");
+      stopLiveInjections();
+      
+      gameState = "pre-ending";
+      enableConfidencePanel(false);
+      resetChoiceSelection();
+      updateAlignmentBar();
+      clearAIComment();
+
+      
+      startAmbientOverlay("glitch");
+
+      progressEl.textContent = "ПОСЛЕДНИЙ ЗАПРОС";
+      sceneTitleEl.textContent = "ПОСЛЕДНИЙ ЗАПРОС";
+
+      const txt =
+        "Запрос к ядру идентичности...\n" +
+        "Проверка целостности протокола...\n" +
+        "Доступ разрешён.\n\n" +
+        "Теперь система покажет, кем Вы стали.";
+      typeText(sceneTextEl, txt, 14);
+
+      
+      setTimeout(() => glitchBurst(sceneTitleEl, 0.07), 420);
+      setTimeout(() => glitchBurst(sceneTextEl, 0.05), 920);
+
+      choicesEl.innerHTML = "";
+      const btn = document.createElement("button");
+      btn.className = "choice-btn";
+      btn.style.setProperty("--card-rot", "0deg");
+      btn.textContent = "Открыть анализ";
+      btn.disabled = true;
+
+      
+      setTimeout(() => { btn.disabled = false; }, 1600);
+
+      btn.addEventListener("click", () => {
+        playClick();
+        showEnding();
+      });
+      choicesEl.appendChild(btn);
+
+      
+      setTimeout(() => {
+        if (gameState === "pre-ending") showEnding();
+      }, 3800);
+    }
+
+
 function showEnding() {
+      stopLiveInjections();
       gameState = "ending";
       enableConfidencePanel(false);
       resetChoiceSelection();
@@ -4372,6 +5068,7 @@ choicesEl.appendChild(pathBtn);
             (testMode ? "тестовому меню." : "следующей сцене.");
           minigameButton.disabled = true;
           setTimeout(() => {
+            minigameDialog.classList.remove("minigame-path");
             minigameModal.classList.remove("show");
             if (testMode) {
               showTestMenu();
