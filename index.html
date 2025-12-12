@@ -253,17 +253,10 @@
       z-index: 5;
     }
 
-<<<<<<< HEAD
     
     #game-root {
       position: relative;
       max-width: 1100px; 
-=======
-    /* === ВЕРСТКА ИНТЕРФЕЙСА (обновлено масштабирование) === */
-    #game-root {
-      position: relative;
-      max-width: 1100px; /* было 960 — расширили примерно на 15% */
->>>>>>> 3e539c32ac898675bf6d210f0ac103fe883cfb44
       width: 100%;
       background: rgba(3, 8, 16, 0.94);
       border: 2px solid #00ff9c;
@@ -377,11 +370,7 @@
       box-shadow: 0 0 10px #7cfbff99;
     }
 
-<<<<<<< HEAD
     
-=======
-    /* === ГРИД ИГРОВОГО ПОЛЯ === */
->>>>>>> 3e539c32ac898675bf6d210f0ac103fe883cfb44
     #screen {
       display: grid;
       grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
@@ -403,11 +392,7 @@
       }
     }
 
-<<<<<<< HEAD
     
-=======
-    /* === КАРТИНКА: крупнее, с min-height 600 === */
->>>>>>> 3e539c32ac898675bf6d210f0ac103fe883cfb44
     #image-box {
       border: 1px solid #00ff9c55;
       background: radial-gradient(circle, #041018 0, #020509 70%);
@@ -417,11 +402,7 @@
       overflow: hidden;
       position: relative;
 
-<<<<<<< HEAD
       min-height: 600px; 
-=======
-      min-height: 600px; /* твой фикс, чтобы картинка была крупнее */
->>>>>>> 3e539c32ac898675bf6d210f0ac103fe883cfb44
     }
 
     #image-box::after {
@@ -459,11 +440,7 @@
       padding: 8px;
     }
 
-<<<<<<< HEAD
     
-=======
-    /* === ПРАВАЯ ЧАСТЬ: ТЕКСТ + ВАРИАНТЫ === */
->>>>>>> 3e539c32ac898675bf6d210f0ac103fe883cfb44
     #scene-box {
       display: flex;
       flex-direction: column;
@@ -493,11 +470,7 @@
       align-items: stretch;
     }
 
-<<<<<<< HEAD
     
-=======
-    /* Карточки выбора */
->>>>>>> 3e539c32ac898675bf6d210f0ac103fe883cfb44
     .choice-btn {
       --card-rot: 0deg;
       background: linear-gradient(
@@ -965,11 +938,7 @@
       text-align: center;
     }
 
-<<<<<<< HEAD
     
-=======
-    /* Центровка формы игрока */
->>>>>>> 3e539c32ac898675bf6d210f0ac103fe883cfb44
     #player-form-wrapper {
       display: flex;
       flex-direction: column;
@@ -998,15 +967,9 @@
 
     #pathgame-grid {
       display: grid;
-<<<<<<< HEAD
       grid-template-columns: repeat(10, var(--pg-cell));
       grid-template-rows: repeat(10, var(--pg-cell));
       gap: var(--pg-gap);
-=======
-      grid-template-columns: repeat(10, 24px);
-      grid-template-rows: repeat(10, 24px);
-      gap: 3px;
->>>>>>> 3e539c32ac898675bf6d210f0ac103fe883cfb44
       padding: 6px;
       border-radius: 6px;
       border: 1px solid #00ff9c55;
@@ -1060,13 +1023,8 @@
 
     #pathgame-arrows {
       display: grid;
-<<<<<<< HEAD
       grid-template-columns: repeat(3, var(--pg-arrow));
       grid-template-rows: repeat(2, var(--pg-arrow));
-=======
-      grid-template-columns: repeat(3, 32px);
-      grid-template-rows: repeat(2, 32px);
->>>>>>> 3e539c32ac898675bf6d210f0ac103fe883cfb44
       gap: 4px;
       justify-items: center;
       align-items: center;
@@ -1161,7 +1119,6 @@
       opacity: 1;
       transform: translateY(0);
     }
-<<<<<<< HEAD
   
     
     .effect-canvas {
@@ -1508,9 +1465,6 @@
 }
 
 </style>
-=======
-  </style>
->>>>>>> 3e539c32ac898675bf6d210f0ac103fe883cfb44
 </head>
 <body class="theme-default">
   <div class="bg-lines"></div>
@@ -1523,15 +1477,12 @@
 
   <div id="transition-rift"></div>
 
-<<<<<<< HEAD
   
   <canvas id="fx-canvas" aria-hidden="true"></canvas>
   <canvas id="scan-canvas" aria-hidden="true"></canvas>
   <div id="hud-overlay" aria-hidden="true"></div>
   <audio id="server-hum" src="assets/server_hum.mp3" preload="auto" loop></audio>
 
-=======
->>>>>>> 3e539c32ac898675bf6d210f0ac103fe883cfb44
   <div id="game-root">
     <div id="header">
       <div id="logo">IMI-SYS_01 • ИГРА В ИМИТАЦИЮ</div>
@@ -1646,11 +1597,7 @@
     </div>
   </div>
 
-<<<<<<< HEAD
   
-=======
-  <!-- ОДНА фоновая музыка -->
->>>>>>> 3e539c32ac898675bf6d210f0ac103fe883cfb44
   <audio id="bg-main" src="audio/ambient_main.mp3" loop></audio>
   <audio id="click-sound" src="audio/click.wav"></audio>
 
@@ -2106,7 +2053,6 @@
     const bgMain = document.getElementById("bg-main");
     const clickSound = document.getElementById("click-sound");
     const musicToggle = document.getElementById("music-toggle");
-<<<<<<< HEAD
     const volumeSlider = document.getElementById("volume-slider");
     let musicEnabled = true;
     let masterVolume = 0.60; 
@@ -2115,10 +2061,6 @@
     let lastVolumeRemarkAt = 0;
 	musicToggle.classList.add("on");
 	if (volumeSlider) volumeSlider.value = String(Math.round(masterVolume*100));
-=======
-    let musicEnabled = true;
-	musicToggle.classList.add("on");
->>>>>>> 3e539c32ac898675bf6d210f0ac103fe883cfb44
 	let musicInitialized = false;
 	function initMusicOnce() {
   if (musicInitialized || !musicEnabled) return;
@@ -2129,7 +2071,6 @@
   initMusicOnce();
 	}, { once: true });
 
-<<<<<<< HEAD
     function emitAI(text, ttl = 3200) {
       if (!aiCommentEl) return;
       aiCommentEl.textContent = "ИИ-оператор: «" + text + "»";
@@ -2199,8 +2140,6 @@
 
 
 
-=======
->>>>>>> 3e539c32ac898675bf6d210f0ac103fe883cfb44
 
     const epilogueModal = document.getElementById("epilogue-modal");
     const epilogueBackdrop = document.getElementById("epilogue-backdrop");
@@ -2233,10 +2172,7 @@
     let selectedChoiceIsSecret = false;
 
     let minigameMode = "reaction";
-<<<<<<< HEAD
       minigameDialog.classList.remove("minigame-path");
-=======
->>>>>>> 3e539c32ac898675bf6d210f0ac103fe883cfb44
     let minigamePhase = "idle";
     let minigameTimeoutId = null;
     let minigameStartTime = 0;
@@ -3214,7 +3150,6 @@ function startServerHum() {
         return;
       }
 
-<<<<<<< HEAD
       
       let baseVol = 0.25;
       if (totalWeighted > 0.0001) {
@@ -3225,18 +3160,6 @@ function startServerHum() {
         }
       }
       bgMain.volume = Math.max(0, Math.min(0.4, baseVol)) * masterVolume * (isMuted ? 0 : 1);
-=======
-      // База: тихая атмосфера, +5–10% громче при уклоне в ИИ
-      let baseVol = 0.25;
-      if (totalWeighted > 0.0001) {
-        if (techRatio > humanRatio) {
-          baseVol = 0.30 + 0.08 * dominance; // ~0.30–0.38 при сильном уклоне в ИИ
-        } else {
-          baseVol = 0.22 + 0.06 * dominance; // 0.22–0.28 при уклоне к людям/балансе
-        }
-      }
-      bgMain.volume = Math.max(0, Math.min(0.4, baseVol));
->>>>>>> 3e539c32ac898675bf6d210f0ac103fe883cfb44
     }
 
     function startBackgroundMusic() {
@@ -3246,7 +3169,6 @@ function startServerHum() {
     }
 
     function toggleMusic() {
-<<<<<<< HEAD
       
       isMuted = !isMuted;
       if (isMuted) {
@@ -3261,18 +3183,6 @@ function startServerHum() {
         updateMusicMood();
         applyMasterVolume();
         emitAI("Звук возвращён. Канал стабилен.");
-=======
-      if (!bgMain) return;
-      if (!musicEnabled) {
-        musicEnabled = true;
-        musicToggle.classList.add("on");
-        startBackgroundMusic();
-      } else {
-        musicEnabled = false;
-        musicToggle.classList.remove("on");
-        try { bgMain.pause(); } catch (e) {}
-        bgMain.volume = 0;
->>>>>>> 3e539c32ac898675bf6d210f0ac103fe883cfb44
       }
       applyMasterVolume();
     }
@@ -4014,12 +3924,8 @@ choicesEl.innerHTML = "";
       updateAlignmentBar();
 
       setTimeout(() => {
-<<<<<<< HEAD
         minigameDialog.classList.remove("minigame-path");
             minigameModal.classList.remove("show");
-=======
-        minigameModal.classList.remove("show");
->>>>>>> 3e539c32ac898675bf6d210f0ac103fe883cfb44
         if (testMode) {
           showTestMenu();
         } else if (currentSceneIndex < scenes.length) {
@@ -4035,10 +3941,7 @@ choicesEl.innerHTML = "";
     function setupPathMinigame() {
       gameState = "minigame";
       minigameMode = "path";
-<<<<<<< HEAD
       minigameDialog.classList.add("minigame-path");
-=======
->>>>>>> 3e539c32ac898675bf6d210f0ac103fe883cfb44
       if (minigameTimeoutId) {
         clearTimeout(minigameTimeoutId);
         minigameTimeoutId = null;
@@ -4070,10 +3973,7 @@ choicesEl.innerHTML = "";
           cell.className = "path-cell";
           cell.dataset.r = r;
           cell.dataset.c = c;
-<<<<<<< HEAD
           cell.removeAttribute('title');
-=======
->>>>>>> 3e539c32ac898675bf6d210f0ac103fe883cfb44
           if (r === pathConfig.start.r && c === pathConfig.start.c) {
             cell.classList.add("path-start");
           }
@@ -4085,20 +3985,6 @@ choicesEl.innerHTML = "";
           if (evIndex >= 0) {
             cell.classList.add("path-event-node");
             cell.dataset.eventIndex = String(evIndex);
-<<<<<<< HEAD
-=======
-
-            cell.addEventListener("mouseenter", (e) => {
-              const ev = pathConfig.events[evIndex];
-              showPathTooltip(ev, e.clientX, e.clientY);
-            });
-            cell.addEventListener("mousemove", (e) => {
-              movePathTooltip(e.clientX, e.clientY);
-            });
-            cell.addEventListener("mouseleave", () => {
-              hidePathTooltip();
-            });
->>>>>>> 3e539c32ac898675bf6d210f0ac103fe883cfb44
           }
 
           cells[r][c] = cell;
@@ -4149,18 +4035,7 @@ choicesEl.innerHTML = "";
       container.appendChild(movesEl);
 
       minigameDialog.appendChild(container);
-<<<<<<< HEAD
       
-=======
-
-      if (!pathTooltipEl) {
-        pathTooltipEl = document.createElement("div");
-        pathTooltipEl.className = "path-tooltip";
-        pathTooltipEl.style.display = "none";
-        document.body.appendChild(pathTooltipEl);
-      }
-
->>>>>>> 3e539c32ac898675bf6d210f0ac103fe883cfb44
       pathGameState = {
         container,
         grid,
@@ -4202,11 +4077,7 @@ choicesEl.innerHTML = "";
     }
 
     function showPathTooltip(ev, x, y) {
-<<<<<<< HEAD
       
-=======
-      // Tooltips are disabled by design (no hover spoilers).
->>>>>>> 3e539c32ac898675bf6d210f0ac103fe883cfb44
       return;
     }
 
@@ -4354,12 +4225,8 @@ minigameTextEl.textContent = text + "\n\nПереход к " +
       pathGameState = null;
 
       setTimeout(() => {
-<<<<<<< HEAD
         minigameDialog.classList.remove("minigame-path");
             minigameModal.classList.remove("show");
-=======
-        minigameModal.classList.remove("show");
->>>>>>> 3e539c32ac898675bf6d210f0ac103fe883cfb44
         if (testMode) {
           showTestMenu();
         } else if (currentSceneIndex < scenes.length) {
@@ -4503,30 +4370,21 @@ if (prevSceneIndex === FIRST_SCENE_INDEX) {
 
     
     function showMandatoryEpilogue() {
-<<<<<<< HEAD
       startObservation();
       setObservationMode("active");
       stopLiveInjections();
-=======
->>>>>>> 3e539c32ac898675bf6d210f0ac103fe883cfb44
       gameState = "epilogue";
       enableConfidencePanel(false);
       resetChoiceSelection();
       updateAlignmentBar();
       updateMusicMood();
       clearAIComment();
-<<<<<<< HEAD
       startAmbientOverlay("calm");
 
       progressEl.textContent = "ЭПИЛОГ";
       sceneTitleEl.textContent = "ЭПИЛОГ";
       
       showSceneImage({ image: "images/ending_mixed.png", title: "ЭПИЛОГ" });
-=======
-
-      progressEl.textContent = "ЭПИЛОГ";
-      sceneTitleEl.textContent = "ЭПИЛОГ";
->>>>>>> 3e539c32ac898675bf6d210f0ac103fe883cfb44
 
       const epilogueText =
         "Анализ решений завершён.\n\n" +
@@ -4548,7 +4406,6 @@ if (prevSceneIndex === FIRST_SCENE_INDEX) {
       btn.textContent = "Узнать Анализ";
       btn.addEventListener("click", () => {
         playClick();
-<<<<<<< HEAD
         showLastRequest();
       });
       choicesEl.appendChild(btn);
@@ -4608,14 +4465,6 @@ function showLastRequest() {
 
 function showEnding() {
       stopLiveInjections();
-=======
-        showEnding();
-      });
-      choicesEl.appendChild(btn);
-    }
-
-function showEnding() {
->>>>>>> 3e539c32ac898675bf6d210f0ac103fe883cfb44
       gameState = "ending";
       enableConfidencePanel(false);
       resetChoiceSelection();
