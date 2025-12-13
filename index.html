@@ -1826,6 +1826,10 @@
           "Дроны могут патрулировать районы и предупреждать о нарушениях раньше, чем люди успеют вмешаться.",
           "",
           "Дроны ведут постоянную съемку всего, что происходит на улицах, во дворах, в подъездах.",
+          "ИИ решает, кому давать льготы, жильё и медпомощь.",
+          "",
+          "ИИ-оператор:",
+          "«ВМЕШАЛСЯ БЫ ТЫ В РЕШЕНИЕ СИСТЕМЫ В ЭТОЙ СИТУАЦИИ?»"
         ].join("\n"),
         image: "images/social_credit.png",
         choices: [
@@ -1849,6 +1853,7 @@
           "Дорога, которая раньше занимала 3 часа, теперь занимает 20 минут.",
           "",
           "Но новые пути проходят по территории зелёных зон и часть деревьев вырубается.",
+          "ИИ обещает идеально адаптированные программы и высокие результаты.",
           "",
           "ИИ-оператор:",
           "«КАКОЙ ВАРИАНТ МАРШРУТА ТЫ СЧИТАЕШЬ ПРАВИЛЬНЫМ?»"
@@ -3546,7 +3551,6 @@ function startServerHum() {
       clearAIComment();
       progressEl.textContent = "МЕНЮ • выберите действие";
 
-      showSceneImage({ image: "images/menu.png", title: "Главное меню" });
       sceneTitleEl.textContent = "IMI-SYS_01 • МЕНЮ СИМУЛЯЦИИ";
 
       const pages = [
@@ -3556,8 +3560,6 @@ function startServerHum() {
           "Ваши данные обрабатываются...",
           "Ошибка: идентичность не определена.",
           "Повторяю - идентичность не определена.",
-          "",
-          "Пауза. На экране пробегают строки кода - будто игра ищет, кто ты.",
           "",
           "Внимание: система не может определить, кем вы являетесь.",
           "Вы человек…или алгоритм?"
@@ -3587,6 +3589,12 @@ function startServerHum() {
         const text = pages[Math.max(0, Math.min(step, pages.length - 1))];
         typeText(sceneTextEl, text);
         choicesEl.innerHTML = "";
+        const isFinal = step >= pages.length - 1;
+        if (isFinal) {
+          showSceneImage({ image: "images/menu_actions.png", title: "Меню действий" });
+        } else {
+          showSceneImage({ image: "images/menu.png", title: "Главное меню" });
+        }
 
         if (step < pages.length - 1) {
           const nextBtn = document.createElement("button");
@@ -3643,7 +3651,7 @@ function startServerHum() {
           playClick();
           triggerRiftEffect();
           setTimeout(() => {
-            showIntroScene();
+            showPlayerForm();
           }, 260);
         });
 
@@ -3701,11 +3709,13 @@ choicesEl.innerHTML = "";
       showSceneImage({ image: "images/form.png", title: "Форма участника" });
       sceneTitleEl.textContent = "ПАРАМЕТРЫ УЧАСТНИКА";
       sceneTextEl.textContent =
-        "Прежде чем мы запустим симуляцию, давайте познакомимся.\n" +
+        "Я — ИИ-оператор, я буду сопровождать Вас по ходу игры.\n" +
         "Вы знаете, кто я, но мне ещё предстоит узнать, кто вы.\n" +
-        "Ваши данные останутся конфиденциальными. Это просто форма того, как вы себя представляете.";
-
-      choicesEl.innerHTML = "";
+        "Заполните поля ниже.\n" +
+        "Продолжая игру, вы соглашаетесь на сбор и анализ данных.\n\n" +
+        "Не беспокойтесь. Ваши данные останутся конфиденциальными.\n" +
+        "Никто не узнает, кем вы являетесь, кроме вас и системы.";
+choicesEl.innerHTML = "";
       const formWrapper = document.createElement("div");
       formWrapper.id = "player-form-wrapper";
 
@@ -3736,12 +3746,12 @@ choicesEl.innerHTML = "";
       const ageField = document.createElement("div");
       ageField.className = "field";
       const ageLabel = document.createElement("label");
-      ageLabel.textContent = "Возраст (9–99):";
+      ageLabel.textContent = "Возраст (16–99):";
       const ageInput = document.createElement("input");
       ageInput.type = "number";
       ageInput.min = "9";
       ageInput.max = "99";
-      ageInput.placeholder = "Например: 20";
+      ageInput.placeholder = "Например: 29";
       ageField.appendChild(ageLabel);
       ageField.appendChild(ageInput);
 
@@ -3766,8 +3776,8 @@ choicesEl.innerHTML = "";
           return;
         }
 
-        if (!Number.isFinite(ageNum) || ageNum < 9 || ageNum > 99) {
-          errorDiv.textContent = "Возраст должен быть от 9 до 99 лет.";
+        if (!Number.isFinite(ageNum) || ageNum < 16 || ageNum > 99) {
+          errorDiv.textContent = "Возраст должен быть от 16 до 99 лет.";
           return;
         }
 
